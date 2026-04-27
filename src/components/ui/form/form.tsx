@@ -16,7 +16,7 @@ import { cloneElement, isValidElement, type ReactElement } from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "../label";
 import { BodyText } from "@/components/typography";
-import { EyeIcon } from "@phosphor-icons/react";
+import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 
 type FormProps<Schema extends ZodType<FieldValues, FieldValues>> = {
   schema: Schema;
@@ -91,7 +91,9 @@ export function FormField({ label, error, children }: FormFieldProps) {
       <Label className="block text-md font-medium my-2">{label}</Label>
       {child}
       {error?.message && (
-        <BodyText className="text-red-600 mt-1">{error.message}</BodyText>
+        <BodyText className="text-red-600 mt-1 text-xs">
+          {error.message}
+        </BodyText>
       )}
     </div>
   );
@@ -137,13 +139,18 @@ export function PasswordFormField({
           {!showPassword ? (
             <EyeIcon className="size-5" />
           ) : (
-            <EyeIcon className="size-5" />
+            <EyeSlashIcon className="size-5" />
           )}
 
-          <BodyText>show</BodyText>
+          <p>show</p>
         </div>
       </div>
       {child}
+      {error?.message && (
+        <BodyText className="text-red-600 mt-1 text-xs">
+          {error.message}
+        </BodyText>
+      )}
     </div>
   );
 }

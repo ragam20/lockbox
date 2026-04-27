@@ -1,6 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { number } from "zod";
 import zxcvbn from "zxcvbn";
 
 export type PasswordStrength = {

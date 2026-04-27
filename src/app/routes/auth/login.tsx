@@ -1,0 +1,23 @@
+import { SmokeEffect } from "@/components/effects/smoke-effect";
+import { Heading5 } from "@/components/typography";
+
+export const LoginRoute = () => {
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-black">
+      <header className="relative z-10 border-b">
+        <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
+          <div className="shrink-0">
+            <Heading5 className="cursor-pointer">
+              <span className="text-neon-green">Lock</span>
+              Box
+            </Heading5>
+          </div>
+        </nav>
+      </header>
+
+      <main className="relative z-10"></main>
+
+      <SmokeEffect />
+    </div>
+  );
+};
