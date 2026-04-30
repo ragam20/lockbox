@@ -1,9 +1,12 @@
+import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 import { Outlet } from "react-router";
 
 export const AppRoot = () => {
   return (
     <>
-      <Outlet />
+      <DashboardLayout>
+        <Outlet />
+      </DashboardLayout>
     </>
   );
 };

@@ -1,7 +1,7 @@
 export const paths = {
   landing: {
     path: "/landing",
-    getHref: () => "/",
+    getHref: () => "/landing",
   },
 
   auth: {
@@ -18,6 +18,21 @@ export const paths = {
   },
 
   app: {
-    root: {},
+    root: {
+      path: "/app",
+      getHref: () => "/app",
+    },
+    vault: {
+      path: "",
+      getHref: () => paths.app.root.path,
+    },
+    tool: {
+      path: "tool",
+      getHref: () => `${paths.app.root.getHref()}/${paths.app.tool.path}`,
+    },
+    account: {
+      path: "account",
+      getHref: () => `${paths.app.root.getHref()}/${paths.app.account.path}`,
+    },
   },
 };

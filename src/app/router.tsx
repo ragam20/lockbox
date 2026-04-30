@@ -6,6 +6,10 @@ import { LandingRoute } from "./routes/landing";
 import { paths } from "@/config/paths";
 import { RegisterRoute } from "./routes/auth/register";
 import { LoginRoute } from "./routes/auth/login";
+import { VaultRoute } from "./routes/app/vault";
+import { AccountRoute } from "./routes/app/account";
+import { ToolRoute } from "./routes/app/tool";
+import { AppRoot } from "./root";
 
 const createAppRouter = createBrowserRouter([
   {
@@ -23,6 +27,32 @@ const createAppRouter = createBrowserRouter([
     Component: LoginRoute,
     ErrorBoundary: ErrorBoundaryRoute,
   },
+
+  {
+    path: paths.app.root.path,
+    element: <AppRoot />,
+    ErrorBoundary: ErrorBoundaryRoute,
+
+    children: [
+      {
+        index: true,
+        path: paths.app.vault.path,
+        Component: VaultRoute,
+        ErrorBoundary: ErrorBoundaryRoute,
+      },
+      {
+        path: paths.app.account.path,
+        Component: AccountRoute,
+        ErrorBoundary: ErrorBoundaryRoute,
+      },
+      {
+        path: paths.app.tool.path,
+        Component: ToolRoute,
+        ErrorBoundary: ErrorBoundaryRoute,
+      },
+    ],
+  },
+
   {
     path: "*",
     Component: NotFoundRoute,

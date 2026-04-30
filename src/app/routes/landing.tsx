@@ -1,3 +1,4 @@
+import { Head } from "@/components/seo/head";
 import { BodyText, Heading1, Heading5 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { PasswordGeneratorBox } from "@/components/ui/password-generator-box";
@@ -6,6 +7,7 @@ import Typewriter from "typewriter-effect";
 export const LandingRoute = () => {
   return (
     <div className="overflow-hidden mb-56">
+      <Head title="Landing" description="lockbox landing" />
       <header className="border-b">
         <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
           <div className="shrink-0">
