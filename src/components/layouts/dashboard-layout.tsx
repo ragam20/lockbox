@@ -15,12 +15,15 @@ import type React from "react";
 import {
   type LucideProps,
   BookKeyIcon,
-  UserIcon,
   ToolboxIcon,
+  ChevronDownIcon,
+  ArchiveIcon,
 } from "lucide-react";
 import { useSidebar } from "../ui/sidebar-context";
-import { Heading3 } from "../typography";
+import { BodyText, Heading3 } from "../typography";
 import { NavLink } from "react-router";
+import { AvatarPopover } from "../ui/popover/avatar-popover";
+import { UserAvatar } from "../ui/avatar/user-avatar";
 
 type DashboardMenu = {
   title: string;
@@ -39,7 +42,7 @@ const dashboardMenus: DashboardMenu[] = [
     end: true,
   },
   {
-    title: "Peralatan",
+    title: "Alat",
     icon: ToolboxIcon,
     href: paths.app.tool.getHref(),
     end: false,
@@ -73,6 +76,25 @@ export const AppSidebar = () => {
         </Heading3>
       </SidebarHeader>
       <SidebarContent className="bg-void">
+        <AvatarPopover>
+          <div className="flex gap-2 p-2 mb-4 cursor-pointer items-center w-full hover:bg-forest">
+            <UserAvatar
+              user={{
+                id: "1",
+                name: "Sylla Bear",
+                email: "sylla@gmail.com",
+                imgURL: "",
+              }}
+            />
+
+            <BodyText className="flex-1 text-start truncate group-data-[state=collapsed] text-sm">
+              Sylla
+            </BodyText>
+
+            <ChevronDownIcon className="size-4" />
+          </div>
+        </AvatarPopover>
+
         <SidebarMenu>
           {dashboardMenus.map((item) => {
             return (
@@ -88,7 +110,7 @@ export const AppSidebar = () => {
                     <SidebarMenuButton
                       asChild
                       tooltip={item.title}
-                      className={`
+                      className={`text-sm
                           ${isActive ? "bg-forest font-bold" : "bg-transparent"}  
                         `}
                     >
@@ -110,11 +132,11 @@ export const AppSidebar = () => {
           <NavLink to={paths.app.account.getHref()}>
             {({ isActive }) => (
               <SidebarMenuButton
-                tooltip={"akun"}
-                className={`flex gap-3 cursor-pointer ${isActive ? "bg-dark-forest" : "bg-transparent"}`}
+                tooltip={"arsip"}
+                className={`text-sm flex gap-3 cursor-pointer ${isActive ? "bg-dark-forest" : "bg-transparent"}`}
               >
-                <UserIcon />
-                Akun
+                <ArchiveIcon />
+                Arsip
               </SidebarMenuButton>
             )}
           </NavLink>
