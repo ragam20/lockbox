@@ -9,9 +9,9 @@ import {
   StarIcon,
   type LucideIcon,
 } from "lucide-react";
-import { FavoriteSection } from "./favorites";
-import { WebSection } from "./web";
-import { NotesSection } from "./notes";
+import { FavoriteSection } from "./tab/favorites";
+import { WebSection } from "./tab/web";
+import { NotesSection } from "./tab/notes";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
