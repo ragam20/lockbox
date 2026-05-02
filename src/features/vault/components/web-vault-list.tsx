@@ -17,6 +17,7 @@ import {
   StarIcon,
   Trash2Icon,
 } from "lucide-react";
+import { AppPagination } from "@/components/ui/pagination/app-pagination";
 
 const dummyWebList: VaultItemWeb[] = [
   {
@@ -74,57 +75,61 @@ export const WebVaultList = () => {
   } as const;
 
   return (
-    <ul className="flex flex-col gap-4">
-      {dummyWebList.map((item) => (
-        <li
-          key={item.id}
-          className="flex h-14 w-full items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
-        >
-          {item.iconURL ? (
-            <img
-              src={item.iconURL}
-              alt={item.title}
-              className="size-5 rounded-xs object-cover"
-            />
-          ) : (
-            <GlobeLockIcon className="size-5" />
-          )}
+    <div className="flex flex-col gap-6">
+      <ul className="flex flex-col gap-4">
+        {dummyWebList.map((item) => (
+          <li
+            key={item.id}
+            className="flex h-14 w-full items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
+          >
+            {item.iconURL ? (
+              <img
+                src={item.iconURL}
+                alt={item.title}
+                className="size-5 rounded-xs object-cover"
+              />
+            ) : (
+              <GlobeLockIcon className="size-5" />
+            )}
 
-          <BodyText className="flex-1">{item.title}</BodyText>
+            <BodyText className="flex-1">{item.title}</BodyText>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                className="cursor-pointer rounded-md"
-                aria-label={`Buka menu untuk ${item.title}`}
-              >
-                <EllipsisIcon className="size-5" />
-              </Button>
-            </DropdownMenuTrigger>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  className="cursor-pointer rounded-md"
+                  aria-label={`Buka menu untuk ${item.title}`}
+                >
+                  <EllipsisIcon className="size-5" />
+                </Button>
+              </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="w-44 rounded-md">
-              {menuItems.map((menuItem) => {
-                const Icon = menuItem.icon;
+              <DropdownMenuContent align="end" className="w-44 rounded-md">
+                {menuItems.map((menuItem) => {
+                  const Icon = menuItem.icon;
 
-                return (
-                  <DropdownMenuItem
-                    key={menuItem.key}
-                    variant={menuItem.destructive ? "destructive" : "default"}
-                    className="cursor-pointer gap-3 px-3 py-2 text-sm"
-                    onClick={() => actionMap[menuItem.key]?.(item)}
-                  >
-                    <Icon className="size-4" />
-                    <span>{menuItem.label}</span>
-                  </DropdownMenuItem>
-                );
-              })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </li>
-      ))}
-    </ul>
+                  return (
+                    <DropdownMenuItem
+                      key={menuItem.key}
+                      variant={menuItem.destructive ? "destructive" : "default"}
+                      className="cursor-pointer gap-3 px-3 py-2 text-sm"
+                      onClick={() => actionMap[menuItem.key]?.(item)}
+                    >
+                      <Icon className="size-4" />
+                      <span>{menuItem.label}</span>
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </li>
+        ))}
+      </ul>
+
+      <AppPagination page={1} onPageChange={() => {}} totalPages={10} />
+    </div>
   );
 };
