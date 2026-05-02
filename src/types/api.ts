@@ -14,3 +14,11 @@ export type User = Entity<{
   createdAt?: ISOStringFormat;
   updatedAt?: ISOStringFormat;
 }>;
+
+export type VaultItemWeb = Entity<{
+  iconURL: string;
+  title: string;
+  description: string;
+  createdAt?: ISOStringFormat;
+  updatedAt?: ISOStringFormat;
+}>;
