@@ -1,11 +1,11 @@
 import { ContentLayout } from "@/components/layouts/content-layout";
 import { Head } from "@/components/seo/head";
 
-export const VaultRoute = () => {
+export const AccountRoute = () => {
   return (
     <ContentLayout>
-      <Head title="Brangkas" description="vault page" />
-      <div className="w-full">Vault</div>
+      <Head title="Arsip" description="Archive" />
+      <div>Archive</div>
     </ContentLayout>
   );
 };

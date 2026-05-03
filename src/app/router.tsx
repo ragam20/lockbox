@@ -6,8 +6,8 @@ import { LandingRoute } from "./routes/landing";
 import { paths } from "@/config/paths";
 import { RegisterRoute } from "./routes/auth/register";
 import { LoginRoute } from "./routes/auth/login";
-import { VaultRoute } from "./routes/app/vault";
-import { AccountRoute } from "./routes/app/account";
+import { VaultRoute } from "./routes/app/vaults/vault";
+import { AccountRoute } from "./routes/app/archive";
 import { ToolRoute } from "./routes/app/tool";
 import { AppRoot } from "./root";
 
