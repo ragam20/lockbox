@@ -1,83 +1,79 @@
-import type { ComponentType } from "react";
-import type { VaultItemWeb } from "@/types/api";
+import type { VaultItemNote } from "@/types/api";
 import { Button } from "@/components/ui/button";
+import { BodyText } from "@/components/typography";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BodyText } from "@/components/typography";
 import {
   ArchiveIcon,
-  CopyIcon,
   EllipsisIcon,
-  GlobeLockIcon,
   PencilIcon,
   StarIcon,
   Trash2Icon,
 } from "lucide-react";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
+import { useState, type ComponentType } from "react";
+import { NoteIcon } from "@phosphor-icons/react";
 
-const dummyWebList: VaultItemWeb[] = [
+const dummyNoteList: VaultItemNote[] = [
   {
     id: "1",
-    title: "Facebook",
-    iconURL: "",
-    description: "this is my facebook",
+    title: "My Dairy 1",
+    description: "hi",
   },
   {
     id: "2",
-    title: "Google",
-    iconURL: "",
-    description: "this is my facebook",
+    title: "My Dairy 2",
+    description: "hi",
   },
   {
     id: "3",
-    title: "Instagram",
-    iconURL: "",
-    description: "this is my facebook",
+    title: "My Dairy 3",
+    description: "hi",
+  },
+  {
+    id: "4",
+    title: "My Dairy 4",
+    description: "hi",
+  },
+  {
+    id: "5",
+    title: "My Dairy 5",
+    description: "hi",
   },
 ];
 
 type MenuItem = {
-  key: "copy" | "edit" | "favorite" | "archive" | "delete";
+  key: "edit" | "favorite" | "archive" | "delete";
   label: string;
   icon: ComponentType<{ className?: string }>;
   destructive?: boolean;
 };
 
 const menuItems: MenuItem[] = [
-  { key: "copy", label: "Salin sandi", icon: CopyIcon },
   { key: "edit", label: "Ubah", icon: PencilIcon },
   { key: "favorite", label: "Favorit", icon: StarIcon },
   { key: "archive", label: "Arsip", icon: ArchiveIcon },
   { key: "delete", label: "Hapus", icon: Trash2Icon, destructive: true },
 ];
 
-export const WebVaultList = () => {
-  const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+export const NotesList = () => {
+  const [page, setPage] = useState(1);
 
   const actionMap = {
-    copy: (v: VaultItemWeb) => {
-      handleCopy(v.title);
-    },
-    edit: (v: VaultItemWeb) => {},
-    favorite: (v: VaultItemWeb) => {},
-    archive: (v: VaultItemWeb) => {},
-    delete: (v: VaultItemWeb) => {},
+    edit: (v: VaultItemNote) => {},
+    favorite: (v: VaultItemNote) => {},
+    archive: (v: VaultItemNote) => {},
+    delete: (v: VaultItemNote) => {},
   } as const;
 
   return (
     <div className="flex flex-col gap-6">
       <ul className="flex flex-col gap-4">
-        {dummyWebList.map((item) => (
+        {dummyNoteList.map((item) => (
           <li
             key={item.id}
             className="flex h-14 w-full items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
@@ -89,7 +85,7 @@ export const WebVaultList = () => {
                 className="size-5 rounded-xs object-cover"
               />
             ) : (
-              <GlobeLockIcon className="size-5" />
+              <NoteIcon className="size-5" />
             )}
 
             <BodyText className="flex-1">{item.title}</BodyText>
@@ -129,7 +125,13 @@ export const WebVaultList = () => {
         ))}
       </ul>
 
-      <AppPagination page={1} onPageChange={() => {}} totalPages={10} />
+      <AppPagination
+        page={page}
+        onPageChange={(p) => {
+          setPage(p);
+        }}
+        totalPages={10}
+      />
     </div>
   );
 };

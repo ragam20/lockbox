@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { VaultFilter } from "@/components/ui/popover/vault-filter";
 import type { FormEvent } from "react";
 import { ListFilterIcon } from "lucide-react";
+import { NotesList } from "@/features/vault/components/notes-list";
 
 export const NotesSection = () => {
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -17,13 +18,14 @@ export const NotesSection = () => {
         </VaultFilter>
         <form onSubmit={handleSearch} className="flex w-full gap-4">
           <Input placeholder="cari catatan ..." className="py-4.5 rounded-md" />
-          <Button
-            type="submit"
-            className="py-4 px-6 rounded-md cursor-pointer"
-          >
+          <Button type="submit" className="py-4 px-6 rounded-md cursor-pointer">
             Cari
           </Button>
         </form>
+      </div>
+
+      <div className="mt-15">
+        <NotesList />
       </div>
     </div>
   );

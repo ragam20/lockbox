@@ -22,3 +22,11 @@ export type VaultItemWeb = Entity<{
   createdAt?: ISOStringFormat;
   updatedAt?: ISOStringFormat;
 }>;
+
+export type VaultItemNote = Entity<{
+  iconURL?: string;
+  title: string;
+  description: string;
+  createdAt?: ISOStringFormat;
+  updatedAt?: ISOStringFormat;
+}>;
