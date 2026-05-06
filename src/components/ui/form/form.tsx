@@ -9,6 +9,7 @@ import {
   type FieldErrors,
   FormProvider,
   type FieldError,
+  type DefaultValues,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type React from "react";
@@ -29,6 +30,7 @@ type FormProps<Schema extends ZodType<FieldValues, FieldValues>> = {
   }) => React.ReactNode;
   id?: string;
   className?: string;
+  defaultValues?: DefaultValues<z.input<Schema>>;
 };
 
 export const Form = <Schema extends ZodType<FieldValues, FieldValues>>({
@@ -37,11 +39,13 @@ export const Form = <Schema extends ZodType<FieldValues, FieldValues>>({
   children,
   id,
   className,
+  defaultValues,
 }: FormProps<Schema>) => {
   const methods = useForm<z.input<Schema>, unknown, z.output<Schema>>({
     resolver: zodResolver(schema),
     criteriaMode: "all",
     mode: "onBlur",
+    defaultValues,
   });
 
   return (

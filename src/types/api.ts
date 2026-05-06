@@ -15,9 +15,11 @@ export type User = Entity<{
   updatedAt?: ISOStringFormat;
 }>;
 
-export type VaultItemWeb = Entity<{
+export type VaultItemLogin = Entity<{
   iconURL: string;
   title: string;
+  url?: string;
+  password?: string;
   description: string;
   createdAt?: ISOStringFormat;
   updatedAt?: ISOStringFormat;

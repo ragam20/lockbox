@@ -2,6 +2,7 @@ import { ContentLayout } from "@/components/layouts/content-layout";
 import { Head } from "@/components/seo/head";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BodyText } from "@/components/typography";
+import { CreateLogin } from "@/features/vault/components/create-login";
 import {
   GlobeLockIcon,
   NotebookTextIcon,
@@ -10,7 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { FavoriteSection } from "./tab/favorites";
-import { WebSection } from "./tab/web";
+import { LoginSection } from "./tab/login";
 import { NotesSection } from "./tab/notes";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +19,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useState } from "react";
 
+import { CreateNote } from "@/features/vault/components/create-note";
 type VaultSection = {
   value: string;
   title: string;
@@ -46,7 +49,7 @@ const vaultSections: VaultSection[] = [
     emptyState: "Belum ada login website yang tersimpan.",
     icon: GlobeLockIcon,
     iconClassName: "text-blue-500",
-    section: <WebSection />,
+    section: <LoginSection />,
   },
   {
     value: "catatan",
@@ -69,12 +72,22 @@ export const VaultRoute = () => {
 };
 
 const VaultTabs = () => {
+  const [isCreateLoginOpen, setIsCreateLoginOpen] = useState(false);
+  const [isCreateNoteOpen, setIsCreateNoteOpen] = useState(false);
+
   return (
-    <div className="min-h-screen w-full bg-void">
+    <div className="min-h-screen w-full max-w-full touch-pan-y overflow-x-clip overscroll-x-none bg-void">
+      <CreateLogin
+        open={isCreateLoginOpen}
+        onOpenChange={setIsCreateLoginOpen}
+      />
+
+      <CreateNote open={isCreateNoteOpen} onOpenChange={setIsCreateNoteOpen} />
+
       <Tabs
         defaultValue={vaultSections[0].value}
         orientation="vertical"
-        className="min-h-[calc(100svh-4rem)] w-full flex-col md:flex-row md:gap-0"
+        className="min-h-[calc(100svh-4rem)] w-full min-w-0 flex-col md:flex-row md:gap-0"
       >
         <TabsList
           variant="line"
@@ -95,7 +108,10 @@ const VaultTabs = () => {
             );
           })}
 
-          <AddNewVaultItemPopover>
+          <AddNewVaultItemPopover
+            onCreateLogin={() => setIsCreateLoginOpen(true)}
+            onCreateNote={() => setIsCreateNoteOpen(true)}
+          >
             <Button className="my-4 hover:bg-neon-green rounded-md gap-1  cursor-pointer font-bold text-sm">
               <PlusIcon className="size-5 mb-0.5" />
               Tambah
@@ -108,7 +124,7 @@ const VaultTabs = () => {
             <TabsContent
               key={item.value}
               value={item.value}
-              className="flex-1 p-4 md:p-6 bg-deep-teal"
+              className="min-w-0 flex-1 overflow-x-hidden bg-deep-teal p-4 md:p-6"
             >
               {item.section}
             </TabsContent>
@@ -119,34 +135,56 @@ const VaultTabs = () => {
   );
 };
 
-const addNewVaultItem = [
+type AddNewVaultAction = "create-login" | "create-note";
+
+type AddNewVaultItem = {
+  title: string;
+  icon: LucideIcon;
+  iconClassName: string;
+  action?: AddNewVaultAction;
+};
+
+const addNewVaultItem: AddNewVaultItem[] = [
   {
-    title: "Web",
+    title: "Masuk",
     icon: GlobeLockIcon,
     iconClassName: "text-blue-500 size-3",
+    action: "create-login",
   },
   {
     title: "Catatan",
     icon: NotebookTextIcon,
     iconClassName: "text-amber-900 size-3",
+    action: "create-note",
   },
 ];
 
 type AddNewVaultItemPopoverProps = {
-  onClick?: () => void;
+  onCreateLogin: () => void;
+  onCreateNote: () => void;
   children: React.ReactNode;
 };
 
 const AddNewVaultItemPopover = ({
-  onClick,
+  onCreateLogin,
+  onCreateNote,
   children,
 }: AddNewVaultItemPopoverProps) => {
+  const actionHandlers: Partial<Record<AddNewVaultAction, () => void>> = {
+    "create-login": onCreateLogin,
+    "create-note": onCreateNote,
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent align="start" className="w-full">
         {addNewVaultItem.map((item) => (
-          <div className="flex gap-2 items-center cursor-pointer hover:bg-forest">
+          <div
+            key={item.title}
+            className="flex gap-2 items-center cursor-pointer hover:bg-forest"
+            onClick={item.action ? actionHandlers[item.action] : undefined}
+          >
             <item.icon className={item.iconClassName} />
             <BodyText className="text-sm">{item.title}</BodyText>
           </div>

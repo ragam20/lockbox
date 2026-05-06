@@ -1,5 +1,5 @@
-import type { ComponentType } from "react";
-import type { VaultItemWeb } from "@/types/api";
+import { useState, type ComponentType } from "react";
+import type { VaultItemLogin } from "@/types/api";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,8 +18,9 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
+import { EditLogin } from "./edit-login";
 
-const dummyWebList: VaultItemWeb[] = [
+const dummyWebList: VaultItemLogin[] = [
   {
     id: "1",
     title: "Facebook",
@@ -55,7 +56,11 @@ const menuItems: MenuItem[] = [
   { key: "delete", label: "Hapus", icon: Trash2Icon, destructive: true },
 ];
 
-export const WebList = () => {
+export const LoginList = () => {
+  const [page, setPage] = useState(1);
+  const [items, setItems] = useState(dummyWebList);
+  const [editingItem, setEditingItem] = useState<VaultItemLogin | null>(null);
+
   const handleCopy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -65,34 +70,51 @@ export const WebList = () => {
   };
 
   const actionMap = {
-    copy: (v: VaultItemWeb) => {
+    copy: (v: VaultItemLogin) => {
       handleCopy(v.title);
     },
-    edit: (v: VaultItemWeb) => {},
-    favorite: (v: VaultItemWeb) => {},
-    archive: (v: VaultItemWeb) => {},
-    delete: (v: VaultItemWeb) => {},
+    edit: (v: VaultItemLogin) => {
+      setEditingItem(v);
+    },
+    favorite: (_v: VaultItemLogin) => {},
+    archive: (_v: VaultItemLogin) => {},
+    delete: (_v: VaultItemLogin) => {},
   } as const;
 
   return (
-    <div className="flex flex-col gap-6">
-      <ul className="flex flex-col gap-4">
-        {dummyWebList.map((item) => (
+    <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden">
+      <EditLogin
+        open={Boolean(editingItem)}
+        item={editingItem}
+        onOpenChange={(state) => {
+          if (!state) setEditingItem(null);
+        }}
+        onSubmit={(updatedItem) => {
+          setItems((currentItems) =>
+            currentItems.map((item) =>
+              item.id === updatedItem.id ? updatedItem : item,
+            ),
+          );
+        }}
+      />
+
+      <ul className="flex min-w-0 flex-col gap-4">
+        {items.map((item) => (
           <li
             key={item.id}
-            className="flex h-14 w-full items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
+            className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
           >
             {item.iconURL ? (
               <img
                 src={item.iconURL}
                 alt={item.title}
-                className="size-5 rounded-xs object-cover"
+                className="size-5 shrink-0 rounded-xs object-cover"
               />
             ) : (
-              <GlobeLockIcon className="size-5" />
+              <GlobeLockIcon className="size-5 shrink-0" />
             )}
 
-            <BodyText className="flex-1">{item.title}</BodyText>
+            <BodyText className="min-w-0 flex-1 truncate">{item.title}</BodyText>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -129,7 +151,13 @@ export const WebList = () => {
         ))}
       </ul>
 
-      <AppPagination page={1} onPageChange={() => {}} totalPages={10} />
+      <AppPagination
+        page={page}
+        onPageChange={(p) => {
+          setPage(p);
+        }}
+        totalPages={10}
+      />
     </div>
   );
 };
