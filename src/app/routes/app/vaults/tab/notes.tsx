@@ -11,12 +11,12 @@ export const NotesSection = () => {
   };
 
   return (
-    <div>
-      <div className="flex gap-4 items-center">
+    <div className="min-w-0 overflow-x-hidden">
+      <div className="flex min-w-0 items-center gap-4">
         <VaultFilter value={() => {}}>
-          <ListFilterIcon className="size-5 cursor-pointer" />
+          <ListFilterIcon className="size-5 shrink-0 cursor-pointer" />
         </VaultFilter>
-        <form onSubmit={handleSearch} className="flex w-full gap-4">
+        <form onSubmit={handleSearch} className="flex min-w-0 flex-1 gap-4">
           <Input placeholder="cari catatan ..." className="py-4.5 rounded-md" />
           <Button type="submit" className="py-4 px-6 rounded-md cursor-pointer">
             Cari

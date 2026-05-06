@@ -1,23 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { VaultFilter } from "@/components/ui/popover/vault-filter";
-import { WebList } from "@/features/vault/components/web-list";
+import { LoginList } from "@/features/vault/components/login-list";
 import type { FormEvent } from "react";
 import { ListFilterIcon } from "lucide-react";
 
-export const WebSection = () => {
+export const LoginSection = () => {
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
 
   return (
-    <div>
-      <div className="flex gap-4 items-center">
+    <div className="min-w-0 overflow-x-hidden">
+      <div className="flex min-w-0 items-center gap-4">
         <VaultFilter value={() => {}}>
-          <ListFilterIcon className="size-5 cursor-pointer" />
+          <ListFilterIcon className="size-5 shrink-0 cursor-pointer" />
         </VaultFilter>
-        <form onSubmit={handleSearch} className="flex w-full gap-4">
-          <Input placeholder="cari web ..." className="py-4.5 rounded-md" />
+        <form onSubmit={handleSearch} className="flex min-w-0 flex-1 gap-4">
+          <Input placeholder="cari login ..." className="py-4.5 rounded-md" />
           <Button type="submit" className="py-4 px-6 rounded-md cursor-pointer">
             Cari
           </Button>
@@ -25,7 +25,7 @@ export const WebSection = () => {
       </div>
 
       <div className="mt-15">
-        <WebList />
+        <LoginList />
       </div>
     </div>
   );
