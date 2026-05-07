@@ -5,6 +5,7 @@ import {
   type FormState,
   type SubmitHandler,
   type UseFormRegister,
+  type UseFormReset,
   type UseFormWatch,
   type FieldErrors,
   FormProvider,
@@ -27,6 +28,7 @@ type FormProps<Schema extends ZodType<FieldValues, FieldValues>> = {
     errors: FieldErrors<z.input<Schema>>;
     watch: UseFormWatch<z.input<Schema>>;
     state: FormState<z.input<Schema>>;
+    reset: UseFormReset<z.input<Schema>>;
   }) => React.ReactNode;
   id?: string;
   className?: string;
@@ -60,6 +62,7 @@ export const Form = <Schema extends ZodType<FieldValues, FieldValues>>({
           errors: methods.formState.errors,
           watch: methods.watch,
           state: methods.formState,
+          reset: methods.reset,
         })}
       </form>
     </FormProvider>

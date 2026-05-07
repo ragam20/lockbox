@@ -7,9 +7,10 @@ import { paths } from "@/config/paths";
 import { RegisterRoute } from "./routes/auth/register";
 import { LoginRoute } from "./routes/auth/login";
 import { VaultRoute } from "./routes/app/vaults/vault";
-import { AccountRoute } from "./routes/app/archive";
+import { ArchiveRoute } from "./routes/app/archive";
 import { ToolRoute } from "./routes/app/tool";
 import { AppRoot } from "./root";
+import { AccountSettingRoute } from "./routes/app/user/account-setting";
 
 const createAppRouter = createBrowserRouter([
   {
@@ -41,8 +42,13 @@ const createAppRouter = createBrowserRouter([
         ErrorBoundary: ErrorBoundaryRoute,
       },
       {
-        path: paths.app.account.path,
-        Component: AccountRoute,
+        path: paths.app.accountSetting.path,
+        Component: AccountSettingRoute,
+        ErrorBoundary: ErrorBoundaryRoute,
+      },
+      {
+        path: paths.app.archive.path,
+        Component: ArchiveRoute,
         ErrorBoundary: ErrorBoundaryRoute,
       },
       {
