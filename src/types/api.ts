@@ -11,8 +11,8 @@ export type User = Entity<{
   email: string;
   imgURL?: string | null;
 
-  createdAt?: ISOStringFormat;
-  updatedAt?: ISOStringFormat;
+  createdAt?: ISOStringFormat | string;
+  updatedAt?: ISOStringFormat | string;
 }>;
 
 export type VaultItemLogin = Entity<{
@@ -21,14 +21,14 @@ export type VaultItemLogin = Entity<{
   url?: string;
   password?: string;
   description: string;
-  createdAt?: ISOStringFormat;
-  updatedAt?: ISOStringFormat;
+  createdAt?: ISOStringFormat | string;
+  updatedAt?: ISOStringFormat | string;
 }>;
 
 export type VaultItemNote = Entity<{
   iconURL?: string;
   title: string;
   description: string;
-  createdAt?: ISOStringFormat;
-  updatedAt?: ISOStringFormat;
+  createdAt?: ISOStringFormat | string;
+  updatedAt?: ISOStringFormat | string;
 }>;

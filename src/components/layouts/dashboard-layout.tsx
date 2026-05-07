@@ -21,9 +21,9 @@ import {
 } from "lucide-react";
 import { useSidebar } from "../ui/sidebar-context";
 import { BodyText, Heading3 } from "../typography";
-import { NavLink } from "react-router";
-import { AvatarPopover } from "../ui/popover/avatar-popover";
+import { NavLink, useNavigate } from "react-router";
 import { UserAvatar } from "../ui/avatar/user-avatar";
+import { AvatarDropdown } from "../ui/popover/avatar-dropdown";
 
 type DashboardMenu = {
   title: string;
@@ -67,6 +67,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
 export const AppSidebar = () => {
   const { isMobile, setOpenMobile } = useSidebar();
+  const navigate = useNavigate();
 
   return (
     <Sidebar collapsible="icon" className="group">
@@ -76,7 +77,14 @@ export const AppSidebar = () => {
         </Heading3>
       </SidebarHeader>
       <SidebarContent className="bg-void">
-        <AvatarPopover>
+        <AvatarDropdown
+          accountSetting={() => {
+            navigate(paths.app.accountSetting.path);
+          }}
+          logout={() => {
+            navigate(paths.landing.path);
+          }}
+        >
           <div className="flex gap-2 p-2 mb-4 cursor-pointer items-center w-full hover:bg-forest">
             <UserAvatar
               user={{
@@ -93,7 +101,7 @@ export const AppSidebar = () => {
 
             <ChevronDownIcon className="size-4" />
           </div>
-        </AvatarPopover>
+        </AvatarDropdown>
 
         <SidebarMenu>
           {dashboardMenus.map((item) => {
@@ -129,7 +137,7 @@ export const AppSidebar = () => {
 
       <SidebarFooter>
         <SidebarMenuItem>
-          <NavLink to={paths.app.account.getHref()}>
+          <NavLink to={paths.app.archive.getHref()}>
             {({ isActive }) => (
               <SidebarMenuButton
                 tooltip={"arsip"}

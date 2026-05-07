@@ -26,13 +26,18 @@ export const paths = {
       path: "",
       getHref: () => paths.app.root.path,
     },
+    accountSetting: {
+      path: "account-setting",
+      getHref: () =>
+        `${paths.app.root.getHref()}/${paths.app.accountSetting.path}`,
+    },
     tool: {
       path: "tool",
       getHref: () => `${paths.app.root.getHref()}/${paths.app.tool.path}`,
     },
-    account: {
-      path: "account",
-      getHref: () => `${paths.app.root.getHref()}/${paths.app.account.path}`,
+    archive: {
+      path: "archive",
+      getHref: () => `${paths.app.root.getHref()}/${paths.app.archive.path}`,
     },
   },
 };
