@@ -8,7 +8,7 @@ import { RegisterRoute } from "./routes/auth/register";
 import { LoginRoute } from "./routes/auth/login";
 import { VaultRoute } from "./routes/app/vaults/vault";
 import { ArchiveRoute } from "./routes/app/archive";
-import { ToolRoute } from "./routes/app/tool";
+import { ToolRoute } from "./routes/app/tools/tool";
 import { AppRoot } from "./root";
 import { AccountSettingRoute } from "./routes/app/user/account-setting";
 
