@@ -7,10 +7,11 @@ import { paths } from "@/config/paths";
 import { RegisterRoute } from "./routes/auth/register";
 import { LoginRoute } from "./routes/auth/login";
 import { VaultRoute } from "./routes/app/vaults/vault";
-import { ArchiveRoute } from "./routes/app/archive";
 import { ToolRoute } from "./routes/app/tools/tool";
 import { AppRoot } from "./root";
 import { AccountSettingRoute } from "./routes/app/user/account-setting";
+import { ArchiveRoute } from "./routes/app/archive/page";
+import { PricingRoute } from "./routes/app/pricing/page";
 
 const createAppRouter = createBrowserRouter([
   {
@@ -26,6 +27,12 @@ const createAppRouter = createBrowserRouter([
   {
     path: paths.auth.login.path,
     Component: LoginRoute,
+    ErrorBoundary: ErrorBoundaryRoute,
+  },
+
+  {
+    path: paths.pricing.path,
+    Component: PricingRoute,
     ErrorBoundary: ErrorBoundaryRoute,
   },
 

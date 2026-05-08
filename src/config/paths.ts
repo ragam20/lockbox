@@ -17,6 +17,11 @@ export const paths = {
     },
   },
 
+  pricing: {
+    path: "/pricing",
+    getHref: () => paths.pricing.path,
+  },
+
   app: {
     root: {
       path: "/app",

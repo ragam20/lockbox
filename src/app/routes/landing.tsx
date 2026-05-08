@@ -6,7 +6,7 @@ import Typewriter from "typewriter-effect";
 
 export const LandingRoute = () => {
   return (
-    <div className="overflow-hidden mb-56">
+    <div className="flex min-h-svh flex-col overflow-x-hidden">
       <Head title="Landing" description="lockbox landing" />
       <header className="border-b">
         <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
@@ -30,7 +30,7 @@ export const LandingRoute = () => {
         </nav>
       </header>
 
-      <main>
+      <main className="flex-1">
         <section
           id="hero-section"
           className="md:mx-auto max-w-6xl mt-24 flex flex-col gap-4"
@@ -66,11 +66,17 @@ export const LandingRoute = () => {
 
         <section
           id="password-generator-box"
-          className="p-6 mx-auto xl:w-300 mt-26 md:mt-46"
+          className="p-6 mx-auto xl:w-300 mt-8 md:mt-46"
         >
           <PasswordGeneratorBox />
         </section>
       </main>
+
+      <footer className="mt-10 flex h-16 w-full shrink-0 items-center justify-center border">
+        <BodyText className="text-center text-sm">
+          &copy; 2026 LockBox. All Rights Reserved.
+        </BodyText>
+      </footer>
     </div>
   );
 };
