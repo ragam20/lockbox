@@ -22,15 +22,15 @@ export const PasswordTuning = () => {
         {({ register, errors }) => (
           <>
             <FormField label="Memori" error={errors.memory}>
-              <Input placeholder="3" {...register} />
+              <Input placeholder="3" className="py-4" {...register} />
             </FormField>
 
             <FormField label="Time" error={errors.time}>
-              <Input placeholder="3" {...register} />
+              <Input placeholder="3" className="py-4" {...register} />
             </FormField>
 
             <FormField label="Paralel" error={errors.parallelism}>
-              <Input placeholder="3" {...register} />
+              <Input placeholder="3" className="py-4" {...register} />
             </FormField>
           </>
         )}

@@ -1,7 +1,7 @@
 export const paths = {
   landing: {
-    path: "/landing",
-    getHref: () => "/landing",
+    path: "/",
+    getHref: () => "/",
   },
 
   auth: {

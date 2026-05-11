@@ -18,6 +18,7 @@ import { AppPagination } from "@/components/ui/pagination/app-pagination";
 import { useState, type ComponentType } from "react";
 import { NoteIcon } from "@phosphor-icons/react";
 import { EditNote } from "./edit-note";
+import { Link } from "react-router";
 
 const dummyNoteList: VaultItemNote[] = [
   {
@@ -98,17 +99,21 @@ export const NotesList = () => {
             key={item.id}
             className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
           >
-            {item.iconURL ? (
-              <img
-                src={item.iconURL}
-                alt={item.title}
-                className="size-5 shrink-0 rounded-xs object-cover"
-              />
-            ) : (
-              <NoteIcon className="size-5 shrink-0" />
-            )}
+            <Link to={""} className="flex min-w-0 flex-1 items-center gap-4">
+              {item.iconURL ? (
+                <img
+                  src={item.iconURL}
+                  alt={item.title}
+                  className="size-5 shrink-0 rounded-xs object-cover"
+                />
+              ) : (
+                <NoteIcon className="size-5 shrink-0" />
+              )}
 
-            <BodyText className="min-w-0 flex-1 truncate">{item.title}</BodyText>
+              <BodyText className="min-w-0 flex-1 truncate">
+                {item.title}
+              </BodyText>
+            </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

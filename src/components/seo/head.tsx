@@ -8,7 +8,7 @@ type HeadProps = {
 export const Head = ({ title, description }: HeadProps) => {
   return (
     <Helmet>
-      <title>{`Lockbox | ${title}`}</title>
+      <title>{`Lockbox ${title === "" ? "" : `| ${title}`}`}</title>
       <meta name="description" content={description} />
     </Helmet>
   );
