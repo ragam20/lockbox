@@ -37,7 +37,7 @@ const ToolTab = () => {
   return (
     <Tabs
       defaultValue={toolsSections[0].value}
-      className="w-full mt-4"
+      className="w-full mt-4 mx-2"
       orientation="horizontal"
     >
       <TabsList className="h-auto w-fit items-stretch justify-start gap-2">

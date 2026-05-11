@@ -17,6 +17,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useState, type ComponentType } from "react";
+import { Link } from "react-router";
 
 type ArchiveWebItem = VaultItemLogin & {
   type: "web";
@@ -117,17 +118,21 @@ export const ArchiveList = () => {
               key={`${item.type}-${item.id}`}
               className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
             >
-              {"iconURL" in item && item.iconURL ? (
-                <img
-                  src={item.iconURL}
-                  alt={item.title}
-                  className="size-5 shrink-0 rounded-xs object-cover"
-                />
-              ) : (
-                <Icon className="size-5 shrink-0" />
-              )}
+              <Link to={""} className="flex min-w-0 flex-1 items-center gap-4">
+                {"iconURL" in item && item.iconURL ? (
+                  <img
+                    src={item.iconURL}
+                    alt={item.title}
+                    className="size-5 shrink-0 rounded-xs object-cover"
+                  />
+                ) : (
+                  <Icon className="size-5 shrink-0" />
+                )}
 
-              <BodyText className="min-w-0 flex-1 truncate">{item.title}</BodyText>
+                <BodyText className="min-w-0 flex-1 truncate">
+                  {item.title}
+                </BodyText>
+              </Link>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -149,7 +154,9 @@ export const ArchiveList = () => {
                     return (
                       <DropdownMenuItem
                         key={menuItem.key}
-                        variant={menuItem.destructive ? "destructive" : "default"}
+                        variant={
+                          menuItem.destructive ? "destructive" : "default"
+                        }
                         className="cursor-pointer gap-3 px-3 py-2 text-sm"
                         onClick={() => actionMap[menuItem.key](item)}
                       >

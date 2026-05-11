@@ -2,12 +2,19 @@ import { Head } from "@/components/seo/head";
 import { BodyText, Heading1, Heading5 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { PasswordGeneratorBox } from "@/components/ui/password-generator-box";
+import { paths } from "@/config/paths";
+import { useNavigate } from "react-router";
 import Typewriter from "typewriter-effect";
 
 export const LandingRoute = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex min-h-svh flex-col overflow-x-hidden">
-      <Head title="Landing" description="lockbox landing" />
+      <Head
+        title=""
+        description="LockBox adalah aplikasi modern untuk menyimpan catatan penting dan password secara aman, cepat, dan terenkripsi agar data pribadi Anda tetap terlindungi."
+      />
       <header className="border-b">
         <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
           <div className="shrink-0">
@@ -17,10 +24,18 @@ export const LandingRoute = () => {
             </Heading5>
           </div>
           <div className="flex shrink-0 gap-3">
-            <Button className="text-void bg-[#d4d4d8] py-4 px-8 rounded-md cursor-pointer hover:bg-white">
+            <Button
+              onClick={() => {
+                navigate(paths.auth.login.path);
+              }}
+              className="text-void bg-[#d4d4d8] py-4 px-8 rounded-md cursor-pointer hover:bg-white"
+            >
               Masuk
             </Button>
             <Button
+              onClick={() => {
+                navigate(paths.auth.register.path);
+              }}
               variant={"outline"}
               className="py-4 px-8 rounded-md cursor-pointer hover:bg-neon-green hover:text-void"
             >
@@ -57,6 +72,9 @@ export const LandingRoute = () => {
             praktis—tanpa perlu repot mengingat semuanya
           </BodyText>
           <Button
+            onClick={() => {
+              navigate(paths.auth.login.path);
+            }}
             variant={"outline"}
             className="mt-4 mx-auto border-neon-green p-6 px-16 rounded-md cursor-pointer w-fit hover:bg-neon-green hover:text-void"
           >

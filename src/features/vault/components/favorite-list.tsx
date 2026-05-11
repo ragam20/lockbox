@@ -22,6 +22,7 @@ import {
 import { useState, type ComponentType } from "react";
 import { EditLogin } from "./edit-login";
 import { EditNote } from "./edit-note";
+import { Link } from "react-router";
 
 type FavoriteWebItem = VaultItemLogin & {
   type: "web";
@@ -34,7 +35,12 @@ type FavoriteNoteItem = VaultItemNote & {
 type FavoriteVaultItem = FavoriteWebItem | FavoriteNoteItem;
 type FavoriteVaultItemType = FavoriteVaultItem["type"];
 
-type FavoriteAction = "copy-password" | "edit" | "favorite" | "archive" | "delete";
+type FavoriteAction =
+  | "copy-password"
+  | "edit"
+  | "favorite"
+  | "archive"
+  | "delete";
 
 type FavoriteMenuItem = {
   key: FavoriteAction;
@@ -96,9 +102,8 @@ const dummyFavoriteList: FavoriteVaultItem[] = [
   },
 ];
 
-const isFavoriteWebItem = (
-  item: FavoriteVaultItem,
-): item is FavoriteWebItem => item.type === "web";
+const isFavoriteWebItem = (item: FavoriteVaultItem): item is FavoriteWebItem =>
+  item.type === "web";
 
 const isFavoriteNoteItem = (
   item: FavoriteVaultItem,
@@ -110,9 +115,8 @@ export const FavoriteList = () => {
   const [editingWebItem, setEditingWebItem] = useState<FavoriteWebItem | null>(
     null,
   );
-  const [editingNoteItem, setEditingNoteItem] = useState<FavoriteNoteItem | null>(
-    null,
-  );
+  const [editingNoteItem, setEditingNoteItem] =
+    useState<FavoriteNoteItem | null>(null);
 
   const handleCopy = async (text: string) => {
     try {
@@ -183,17 +187,21 @@ export const FavoriteList = () => {
               key={`${item.type}-${item.id}`}
               className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
             >
-              {"iconURL" in item && item.iconURL ? (
-                <img
-                  src={item.iconURL}
-                  alt={item.title}
-                  className="size-5 shrink-0 rounded-xs object-cover"
-                />
-              ) : (
-                <Icon className="size-5 shrink-0" />
-              )}
+              <Link to={""} className="flex min-w-0 flex-1 items-center gap-4">
+                {"iconURL" in item && item.iconURL ? (
+                  <img
+                    src={item.iconURL}
+                    alt={item.title}
+                    className="size-5 shrink-0 rounded-xs object-cover"
+                  />
+                ) : (
+                  <Icon className="size-5 shrink-0" />
+                )}
 
-              <BodyText className="min-w-0 flex-1 truncate">{item.title}</BodyText>
+                <BodyText className="min-w-0 flex-1 truncate">
+                  {item.title}
+                </BodyText>
+              </Link>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -215,7 +223,9 @@ export const FavoriteList = () => {
                     return (
                       <DropdownMenuItem
                         key={menuItem.key}
-                        variant={menuItem.destructive ? "destructive" : "default"}
+                        variant={
+                          menuItem.destructive ? "destructive" : "default"
+                        }
                         className="cursor-pointer gap-3 px-3 py-2 text-sm"
                         onClick={() => actionMap[menuItem.key](item)}
                       >
