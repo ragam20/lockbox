@@ -19,26 +19,40 @@ import {
 } from "lucide-react";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
 import { EditLogin } from "./edit-login";
-import { Link } from "react-router";
+import { DetailLogin } from "./detail-login";
 
 const dummyWebList: VaultItemLogin[] = [
   {
     id: "1",
     title: "Facebook",
+    url: "https://facebook.com",
+    password:
+      "YXT&tnGajm3Z^UXtVwS0kUd0WKH4#syZUjhHcD4lPELZBy9Krv!hz$!NbfF8X&u^71Du8rNfoCOF7y%BdCb3*QV*g160o4wUW8fatmt7Itk^nYf4fHCOtO*c%Us2w6wq",
     iconURL: "",
-    description: "this is my facebook",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: "2",
     title: "Google",
+    url: "https://google.com",
+    password: "Facebook",
     iconURL: "",
     description: "this is my facebook",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: "3",
     title: "Instagram",
+    url: "https://instagram.com",
+    password: "Facebook",
     iconURL: "",
     description: "this is my facebook",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
 ];
 
@@ -61,6 +75,7 @@ export const LoginList = () => {
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(dummyWebList);
   const [editingItem, setEditingItem] = useState<VaultItemLogin | null>(null);
+  const [detailItem, setDetailItem] = useState<VaultItemLogin | null>(null);
 
   const handleCopy = async (text: string) => {
     try {
@@ -77,9 +92,15 @@ export const LoginList = () => {
     edit: (v: VaultItemLogin) => {
       setEditingItem(v);
     },
-    favorite: (_v: VaultItemLogin) => {},
-    archive: (_v: VaultItemLogin) => {},
-    delete: (_v: VaultItemLogin) => {},
+    favorite: (v: VaultItemLogin) => {
+      void v;
+    },
+    archive: (v: VaultItemLogin) => {
+      void v;
+    },
+    delete: (v: VaultItemLogin) => {
+      void v;
+    },
   } as const;
 
   return (
@@ -99,13 +120,22 @@ export const LoginList = () => {
         }}
       />
 
+      <DetailLogin
+        open={Boolean(detailItem)}
+        item={detailItem}
+        onOpenChange={(state) => {
+          if (!state) setDetailItem(null);
+        }}
+      />
+
       <ul className="flex min-w-0 flex-col gap-4">
         {items.map((item) => (
           <li
+            onClick={() => setDetailItem(item)}
             key={item.id}
             className="cursor-pointer flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
           >
-            <Link to={""} className="flex min-w-0 flex-1 items-center gap-4">
+            <div className="flex h-fit min-w-0 flex-1 items-center gap-4">
               {item.iconURL ? (
                 <img
                   src={item.iconURL}
@@ -119,7 +149,7 @@ export const LoginList = () => {
               <BodyText className="min-w-0 flex-1 truncate">
                 {item.title}
               </BodyText>
-            </Link>
+            </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

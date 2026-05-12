@@ -34,15 +34,6 @@ type VaultSection = {
 
 const vaultSections: VaultSection[] = [
   {
-    value: "favorite",
-    title: "Favorite",
-    description: "Kumpulan item yang paling sering kamu akses.",
-    emptyState: "Belum ada item favorit di vault kamu.",
-    icon: StarIcon,
-    iconClassName: "text-yellow-300",
-    section: <FavoriteSection />,
-  },
-  {
     value: "web",
     title: "Web",
     description: "Simpan kredensial website dan akun online dengan rapi.",
@@ -59,6 +50,15 @@ const vaultSections: VaultSection[] = [
     icon: NotebookTextIcon,
     iconClassName: "text-amber-900",
     section: <NotesSection />,
+  },
+  {
+    value: "favorite",
+    title: "Favorite",
+    description: "Kumpulan item yang paling sering kamu akses.",
+    emptyState: "Belum ada item favorit di vault kamu.",
+    icon: StarIcon,
+    iconClassName: "text-yellow-300",
+    section: <FavoriteSection />,
   },
 ];
 
