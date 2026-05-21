@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
-import type { VaultItemLogin, VaultItemNote } from "@/types/api";
+import type { VaultItemPassword, VaultItemNote } from "@/types/api";
 import { NoteIcon } from "@phosphor-icons/react";
 import {
   EllipsisIcon,
@@ -19,7 +19,7 @@ import {
 import { useState, type ComponentType } from "react";
 import { Link } from "react-router";
 
-type ArchiveWebItem = VaultItemLogin & {
+type ArchiveWebItem = VaultItemPassword & {
   type: "web";
 };
 

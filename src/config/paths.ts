@@ -9,6 +9,16 @@ export const paths = {
       path: "/auth/register",
       getHref: (redirectTo: string | undefined | null) =>
         `/auth/register${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ""}`,
+
+      complete: {
+        path: "/auth/register/complete",
+        getHref: (session: string) =>
+          `${paths.auth.register.complete.path}?session=${encodeURIComponent(session)}`,
+      },
+    },
+    verifyEmail: {
+      path: "/auth/verify-email",
+      getHref: () => paths.auth.verifyEmail.path,
     },
     login: {
       path: "/auth/login",

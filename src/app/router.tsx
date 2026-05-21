@@ -12,6 +12,8 @@ import { AppRoot } from "./root";
 import { AccountSettingRoute } from "./routes/app/user/account-setting";
 import { ArchiveRoute } from "./routes/app/archive/page";
 import { PricingRoute } from "./routes/app/pricing/page";
+import { CompleteRegisterRoute } from "./routes/auth/complete-register";
+import { VerifyEmailRoute } from "./routes/auth/verify-email";
 
 const createAppRouter = createBrowserRouter([
   {
@@ -22,6 +24,16 @@ const createAppRouter = createBrowserRouter([
   {
     path: paths.auth.register.path,
     Component: RegisterRoute,
+    ErrorBoundary: ErrorBoundaryRoute,
+  },
+  {
+    path: paths.auth.register.complete.path,
+    Component: CompleteRegisterRoute,
+    ErrorBoundary: ErrorBoundaryRoute,
+  },
+  {
+    path: paths.auth.verifyEmail.path,
+    Component: VerifyEmailRoute,
     ErrorBoundary: ErrorBoundaryRoute,
   },
   {
