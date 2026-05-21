@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
+
 import { NoteIcon } from "@phosphor-icons/react";
 import {
   EllipsisIcon,
@@ -23,7 +24,6 @@ import {
 
 type ArchiveWebItem = VaultDetailItemByType["web"];
 type ArchiveNoteItem = VaultDetailItemByType["note"];
-
 type ArchiveVaultItem = ArchiveWebItem | ArchiveNoteItem;
 type ArchiveVaultItemType = ArchiveVaultItem["type"];
 

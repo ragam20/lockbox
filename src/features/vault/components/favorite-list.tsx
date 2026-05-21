@@ -19,7 +19,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useState, type ComponentType } from "react";
-import { EditLogin } from "./edit-login";
+import { EditPassword } from "./edit-password";
 import { EditNote } from "./edit-note";
 import {
   VaultItemDetail,
@@ -28,7 +28,6 @@ import {
 
 type FavoriteWebItem = VaultDetailItemByType["web"];
 type FavoriteNoteItem = VaultDetailItemByType["note"];
-
 type FavoriteVaultItem = FavoriteWebItem | FavoriteNoteItem;
 type FavoriteVaultItemType = FavoriteVaultItem["type"];
 
@@ -159,7 +158,7 @@ export const FavoriteList = () => {
 
   return (
     <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden">
-      <EditLogin
+      <EditPassword
         open={Boolean(editingWebItem)}
         item={editingWebItem}
         onOpenChange={(state) => {

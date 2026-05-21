@@ -8,11 +8,11 @@ import {
 } from "@/components/ui/dialog";
 import { Form, FormField, PasswordFormField } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
-import type { VaultItemLogin } from "@/types/api";
+import type { VaultItemPassword } from "@/types/api";
 import { useState } from "react";
 import { z } from "zod";
 
-const editLoginSchema = z.object({
+const editPasswordSchema = z.object({
   title: z.string(),
   url: z
     .string()
@@ -31,21 +31,21 @@ const editLoginSchema = z.object({
   description: z.string().optional(),
 });
 
-type EditLoginValues = z.output<typeof editLoginSchema>;
+type EditPasswordValues = z.output<typeof editPasswordSchema>;
 
-type EditLoginProps = {
+type EditPasswordProps = {
   open: boolean;
-  item: VaultItemLogin | null;
+  item: VaultItemPassword | null;
   onOpenChange: (state: boolean) => void;
-  onSubmit: (item: VaultItemLogin) => void;
+  onSubmit: (item: VaultItemPassword) => void;
 };
 
-export const EditLogin = ({
+export const EditPassword = ({
   open,
   item,
   onOpenChange,
   onSubmit,
-}: EditLoginProps) => {
+}: EditPasswordProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
   if (!item) return null;
@@ -54,21 +54,21 @@ export const EditLogin = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-150">
         <DialogHeader>
-          <Heading5>Ubah Login</Heading5>
+          <Heading5>Ubah Password</Heading5>
         </DialogHeader>
 
         <Form
           key={item.id}
           id="edit-login-id"
           className="my-4 flex flex-col"
-          schema={editLoginSchema}
+          schema={editPasswordSchema}
           defaultValues={{
             title: item.title,
             url: item.url ?? "",
             password: item.password ?? "",
             description: item.description ?? "",
           }}
-          onSubmit={(values: EditLoginValues) => {
+          onSubmit={(values: EditPasswordValues) => {
             onSubmit({
               ...item,
               title: values.title,
