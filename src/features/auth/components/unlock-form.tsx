@@ -30,9 +30,10 @@ import {
 } from "@/lib/crypto/keys";
 import { Navigate, useNavigate } from "react-router";
 import { paths } from "@/config/paths";
+import { cn } from "@/lib/utils";
 
 const loginSchema = z.object({
-  password: z.string(),
+  password: z.string().min(1, "password tidak boleh kosong"),
 });
 type LoginFormValues = z.infer<typeof loginSchema>;
 
@@ -55,6 +56,10 @@ export const UnlockForm = () => {
   }, [loginMutation.isSuccess]);
 
   const onSubmitForm = async (data: LoginFormValues) => {
+    if (data.password === "") {
+      return;
+    }
+
     if (
       argonConfigQuery.data === undefined ||
       userQuery.data === undefined ||
@@ -97,7 +102,9 @@ export const UnlockForm = () => {
       verifier: authVerifier,
     });
 
-    navigate(paths.app.root.path, { replace: true });
+    if (loginMutation.isSuccess) {
+      navigate(paths.app.root.path, { replace: true });
+    }
   };
 
   if (!appStore.auth.isAuthenticated) {
@@ -134,7 +141,7 @@ export const UnlockForm = () => {
                 <Input
                   type={showPassword ? "text" : "password"}
                   placeholder="masukkan password"
-                  className="rounded-md"
+                  className={cn("rounded-md")}
                   {...register("password")}
                 />
               </PasswordFormField>
