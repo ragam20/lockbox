@@ -1,6 +1,6 @@
 import { SmokeEffect } from "@/components/effects/smoke-effect";
 import { Head } from "@/components/seo/head";
-import { Heading5 } from "@/components/typography";
+import { BodyText, Heading5 } from "@/components/typography";
 import { paths } from "@/config/paths";
 import { RegisterForm } from "@/features/auth/components/register-form";
 import { useNavigate } from "react-router";
@@ -31,13 +31,19 @@ export const RegisterRoute = () => {
         </nav>
       </header>
 
-      <main className="relative z-10 max-w-6xl w-full md:w-6xl h-140 mx-auto flex items-center">
+      <main className="relative z-10 flex items-center justify-center h-180">
         <section className="m-auto">
           <RegisterForm />
         </section>
       </main>
 
       <SmokeEffect />
+
+      <footer className="absolute bottom-0 z-10 mt-10 flex h-16 w-full shrink-0 items-center justify-center border bg-transparent">
+        <BodyText className="text-center text-sm">
+          &copy; 2026 LockBox. All Rights Reserved.
+        </BodyText>
+      </footer>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { ContentLayout } from "@/components/layouts/content-layout";
 import { Head } from "@/components/seo/head";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BodyText } from "@/components/typography";
-import { CreateLogin } from "@/features/vault/components/create-login";
+import { CreatePassword } from "@/features/vault/components/create-password";
 import {
   GlobeLockIcon,
   NotebookTextIcon,
@@ -11,7 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { FavoriteSection } from "./tab/favorites";
-import { LoginSection } from "./tab/login";
+import { PasswordSection } from "./tab/password";
 import { NotesSection } from "./tab/notes";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,7 +49,7 @@ const vaultSections: VaultSection[] = [
     emptyState: "Belum ada login website yang tersimpan.",
     icon: GlobeLockIcon,
     iconClassName: "text-blue-500",
-    section: <LoginSection />,
+    section: <PasswordSection />,
   },
   {
     value: "catatan",
@@ -77,7 +77,7 @@ const VaultTabs = () => {
 
   return (
     <div className="min-h-screen w-full max-w-full touch-pan-y overflow-x-clip overscroll-x-none bg-void">
-      <CreateLogin
+      <CreatePassword
         open={isCreateLoginOpen}
         onOpenChange={setIsCreateLoginOpen}
       />

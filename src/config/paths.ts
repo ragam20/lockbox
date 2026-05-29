@@ -5,16 +5,36 @@ export const paths = {
   },
 
   auth: {
+    root: {
+      path: "/auth",
+      getHref: () => "/auth",
+    },
     register: {
       path: "/auth/register",
-      getHref: (redirectTo: string | undefined | null) =>
-        `/auth/register${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ""}`,
+      getHref: (redirectTo?: string | null) =>
+        `${paths.auth.register.path}${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ""}`,
+
+      complete: {
+        path: "/auth/register/complete",
+        getHref: (session: string) =>
+          `${paths.auth.register.complete.path}?session=${encodeURIComponent(session)}`,
+      },
     },
-    login: {
-      path: "/auth/login",
-      getHref: (redirectTo: string | null | undefined) =>
-        `/auth/login${redirectTo ? `?redirectTo = ${encodeURIComponent(redirectTo)}` : ""}`,
+    verifyEmail: {
+      path: "/auth/verify-email",
+      getHref: () => `${paths.auth.verifyEmail.path}`,
     },
+    otp: {
+      path: "/auth/otp",
+      getHref: (redirectTo?: string | null) =>
+        `${paths.auth.otp.path}${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ""}`,
+    },
+  },
+
+  unlock: {
+    path: "/unlock",
+    getHref: (redirectTo?: string | null) =>
+      `${paths.unlock.path}${redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ""}`,
   },
 
   pricing: {

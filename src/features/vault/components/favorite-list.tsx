@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
-import type { VaultItemLogin, VaultItemNote } from "@/types/api";
+import type { VaultItemPassword, VaultItemNote } from "@/types/api";
 import { NoteIcon } from "@phosphor-icons/react";
 import {
   ArchiveIcon,
@@ -20,11 +20,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useState, type ComponentType } from "react";
-import { EditLogin } from "./edit-login";
+import { EditPassword } from "./edit-password";
 import { EditNote } from "./edit-note";
 import { Link } from "react-router";
 
-type FavoriteWebItem = VaultItemLogin & {
+type FavoriteWebItem = VaultItemPassword & {
   type: "web";
 };
 
@@ -155,7 +155,7 @@ export const FavoriteList = () => {
 
   return (
     <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden">
-      <EditLogin
+      <EditPassword
         open={Boolean(editingWebItem)}
         item={editingWebItem}
         onOpenChange={(state) => {

@@ -10,12 +10,32 @@ export type User = Entity<{
   name: string;
   email: string;
   imgURL?: string | null;
+  masterKeySalt: string;
+  authVerifierSalt: string;
 
   createdAt?: ISOStringFormat | string;
   updatedAt?: ISOStringFormat | string;
 }>;
 
-export type VaultItemLogin = Entity<{
+export type Vault = Entity<{
+  timeout: number;
+  timeoutType: string;
+  vaultKeySalt: string;
+
+  createdAt?: ISOStringFormat | string;
+  updatedAt?: ISOStringFormat | string;
+}>;
+
+export type ArgonConfig = Entity<{
+  iteration: number;
+  memory: number;
+  parallelism: number;
+
+  createdAt?: ISOStringFormat | string;
+  updatedAt?: ISOStringFormat | string;
+}>;
+
+export type VaultItemPassword = Entity<{
   iconURL: string;
   title: string;
   url?: string;

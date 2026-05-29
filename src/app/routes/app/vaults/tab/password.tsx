@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { VaultFilter } from "@/components/ui/popover/vault-filter";
-import { LoginList } from "@/features/vault/components/login-list";
+import { PasswordList } from "@/features/vault/components/password-list";
 import type { FormEvent } from "react";
 import { ListFilterIcon } from "lucide-react";
 
-export const LoginSection = () => {
+export const PasswordSection = () => {
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
@@ -25,7 +25,7 @@ export const LoginSection = () => {
       </div>
 
       <div className="mt-15">
-        <LoginList />
+        <PasswordList />
       </div>
     </div>
   );

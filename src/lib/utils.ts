@@ -2,6 +2,13 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import zxcvbn from "zxcvbn";
 
+export function delay(ms: number) {
+  if (ms < 1) {
+    ms = 1;
+  }
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export type PasswordStrength = {
   label: string;
   color: string;

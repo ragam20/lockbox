@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createLoginSchema = z.object({
+export const createPasswordSchema = z.object({
   title: z.string().min(5),
   description: z.string().optional(),
   url: z.string().refine((val) => {
@@ -12,5 +12,5 @@ export const createLoginSchema = z.object({
     }
   }, "invalid URL"),
 });
-export type CreateLoginInput = z.infer<typeof createLoginSchema>;
-export const createLogin = async () => {};
+export type CreatePasswordInput = z.infer<typeof createPasswordSchema>;
+export const createPassword = async () => {};

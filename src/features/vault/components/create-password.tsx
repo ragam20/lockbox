@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import z from "zod";
 
-const createLoginSchema = z.object({
+const createPasswordSchema = z.object({
   title: z.string(),
   password: z.string(),
   url: z.string().refine((val) => {
@@ -30,20 +30,20 @@ type CreateLoginProps = {
   onOpenChange: (state: boolean) => void;
 };
 
-export const CreateLogin = ({ open, onOpenChange }: CreateLoginProps) => {
+export const CreatePassword = ({ open, onOpenChange }: CreateLoginProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-150">
         <DialogHeader>
-          <Heading5>Login Baru</Heading5>
+          <Heading5>Password Baru</Heading5>
         </DialogHeader>
 
         <Form
           id="create-login-id"
           className="my-4 flex flex-col"
-          schema={createLoginSchema}
+          schema={createPasswordSchema}
           onSubmit={() => {}}
         >
           {({ register, errors }) => (

@@ -1,5 +1,5 @@
 import { useState, type ComponentType } from "react";
-import type { VaultItemLogin } from "@/types/api";
+import type { VaultItemPassword as VaultItemPassword } from "@/types/api";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,10 +18,10 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
-import { EditLogin } from "./edit-login";
+import { EditPassword } from "./edit-password";
 import { Link } from "react-router";
 
-const dummyWebList: VaultItemLogin[] = [
+const dummyWebList: VaultItemPassword[] = [
   {
     id: "1",
     title: "Facebook",
@@ -57,10 +57,12 @@ const menuItems: MenuItem[] = [
   { key: "delete", label: "Hapus", icon: Trash2Icon, destructive: true },
 ];
 
-export const LoginList = () => {
+export const PasswordList = () => {
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(dummyWebList);
-  const [editingItem, setEditingItem] = useState<VaultItemLogin | null>(null);
+  const [editingItem, setEditingItem] = useState<VaultItemPassword | null>(
+    null,
+  );
 
   const handleCopy = async (text: string) => {
     try {
@@ -71,20 +73,20 @@ export const LoginList = () => {
   };
 
   const actionMap = {
-    copy: (v: VaultItemLogin) => {
+    copy: (v: VaultItemPassword) => {
       handleCopy(v.title);
     },
-    edit: (v: VaultItemLogin) => {
+    edit: (v: VaultItemPassword) => {
       setEditingItem(v);
     },
-    favorite: (_v: VaultItemLogin) => {},
-    archive: (_v: VaultItemLogin) => {},
-    delete: (_v: VaultItemLogin) => {},
+    favorite: (_v: VaultItemPassword) => {},
+    archive: (_v: VaultItemPassword) => {},
+    delete: (_v: VaultItemPassword) => {},
   } as const;
 
   return (
     <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden">
-      <EditLogin
+      <EditPassword
         open={Boolean(editingItem)}
         item={editingItem}
         onOpenChange={(state) => {
