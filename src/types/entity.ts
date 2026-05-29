@@ -11,6 +11,7 @@ export type User = Entity<{
   email: string;
   imgURL?: string | null;
   masterKeySalt: string;
+  authVerifierSalt: string;
 
   createdAt?: ISOStringFormat | string;
   updatedAt?: ISOStringFormat | string;

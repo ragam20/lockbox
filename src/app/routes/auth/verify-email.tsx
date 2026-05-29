@@ -11,7 +11,7 @@ export const VerifyEmailRoute = () => {
   const token = searchParams.get("token");
 
   if (!token) {
-    return <Navigate to={paths.auth.register.path} replace />;
+    return <Navigate to={paths.auth.register.getHref()} replace />;
   }
 
   return (

@@ -1,8 +1,9 @@
 import { env } from "@/config/env";
 import { ApiError } from "@/types/response";
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
-import { refreshToken } from "./auth";
+import { getErrorMessage } from "./errors/messages";
 import { paths } from "@/config/paths";
+import type { ISOStringFormat } from "date-fns";
 
 const axioBaseConfig = {
   baseURL: env.API_URL,
@@ -21,31 +22,38 @@ publicApi.interceptors.response.use(
     return response;
   },
   (err) => {
+    if (!err.response) {
+      return Promise.reject(
+        new ApiError(
+          "NETWORK_ERROR",
+          getErrorMessage("NETWORK_ERROR", "Network error"),
+          0,
+          new Date().toISOString() as ISOStringFormat,
+        ),
+      );
+    }
+    const code = err.response?.data.code || "";
     const status = err.response?.status;
     const message = err.response?.data?.message || "";
     const timestamp = err.response?.data?.timestamp || "";
 
-    return Promise.reject(new ApiError(message, status, timestamp));
-  },
-);
-
-privateApi.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  function (err) {
-    const status = err.response?.status;
-    const message = err.response?.data?.message || "";
-    const timestamp = err.response?.data?.timestamp || "";
-
-    return Promise.reject(new ApiError(message, status, timestamp));
+    return Promise.reject(
+      new ApiError(code, getErrorMessage(code, message), status, timestamp),
+    );
   },
 );
 
 let refreshPromise: Promise<void> | null = null;
 
+const isAuthRoute = (pathname: string) => {
+  return (
+    pathname === paths.auth.root.path ||
+    pathname.startsWith(`${paths.auth.root.path}/`)
+  );
+};
+
 privateApi.interceptors.response.use(
-  (resp) => resp.data,
+  (response) => response.data,
   async (err: AxiosError) => {
     const status = err.response?.status;
 
@@ -55,34 +63,43 @@ privateApi.interceptors.response.use(
         })
       | undefined;
 
-    if (!originalRequest) {
-      return Promise.reject(err);
-    }
-
-    if (status === 401 && !originalRequest._retry) {
+    if (status === 401 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
         if (!refreshPromise) {
-          refreshPromise = refreshToken().finally(() => {
-            refreshPromise = null;
-          });
+          refreshPromise = publicApi
+            .get("/auth/refresh-token")
+            .then(() => undefined)
+            .finally(() => {
+              refreshPromise = null;
+            });
         }
 
         await refreshPromise;
 
         return privateApi(originalRequest);
-      } catch (err) {
+      } catch (refreshErr) {
         const searchParams = new URLSearchParams(window.location.search);
         const redirectTo =
           searchParams.get("redirectTo") || window.location.pathname;
+        const currentPath = window.location.pathname;
 
-        if (!window.location.pathname.startsWith(paths.auth.login.path)) {
-          window.location.href = paths.auth.login.getHref(redirectTo);
+        if (!isAuthRoute(currentPath)) {
+          window.location.href = paths.auth.otp.getHref(redirectTo);
         }
 
-        return Promise.reject(err);
+        return Promise.reject(refreshErr);
       }
     }
+
+    const code = err.response?.data?.code || "";
+    const statusCode = err.response?.status || 0;
+    const message = err.response?.data?.message || "";
+    const timestamp = err.response?.data?.timestamp || "";
+
+    return Promise.reject(
+      new ApiError(code, getErrorMessage(code, message), statusCode, timestamp),
+    );
   },
 );

@@ -1,4 +1,4 @@
-import { hashArgon2id } from "./argon-config";
+import { type ArgonOptions, hashArgon2id } from "./argon-config";
 
 type DeriveRegistrationKey = {
   masterKeySalt: string;
@@ -10,9 +10,14 @@ type DeriveRegistrationKey = {
 };
 export async function deriveRegistrationKey(
   plainPassword: string,
+  argonOptions?: ArgonOptions,
 ): Promise<DeriveRegistrationKey> {
   const masterKeySalt = crypto.getRandomValues(new Uint8Array(16));
-  const masterKey = await hashArgon2id(plainPassword, masterKeySalt);
+  const masterKey = await hashArgon2id(
+    plainPassword,
+    masterKeySalt,
+    argonOptions,
+  );
 
   const baseKey = await createHKDFBaseKey(masterKey.hash);
 
@@ -202,6 +207,21 @@ export function randomArrayBuffer(length: number) {
 
 export function stringToArrayBuffer(str: string): ArrayBuffer {
   return new TextEncoder().encode(str).buffer;
+}
+
+export function base64ToUint8Array(base64: string): Uint8Array {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+
+  return bytes;
+}
+
+export function base64ToArrayBuffer(base64: string): ArrayBuffer {
+  return base64ToUint8Array(base64).buffer;
 }
 
 // ubah object -> string -> byte

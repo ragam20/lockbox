@@ -18,6 +18,7 @@ import { useRegister } from "../api/complete-register";
 import { useNavigate } from "react-router";
 import { paths } from "@/config/paths";
 import { deriveRegistrationKey } from "@/lib/crypto/keys";
+import { getArgonConfig } from "@/lib/auth";
 
 const completeRegisSchema = z
   .object({
@@ -84,14 +85,11 @@ export const CompleteRegister = ({ session }: CompleteRegisterProps) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showVerifyPassword, setShowVerifyPassword] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [submitLoading, setSubmitLoading] = useState(false);
 
   const { email, verificationError, verficationLoading } =
     useGetRegisterSession(session);
 
-  const { setRegisterData, successMessage, registerLoading } =
-    useRegister(session);
+  const registerMutation = useRegister();
 
   if (verficationLoading) {
     return (
@@ -122,7 +120,7 @@ export const CompleteRegister = ({ session }: CompleteRegisterProps) => {
     );
   }
 
-  if (successMessage) {
+  if (registerMutation.isSuccess) {
     return (
       <div className="p-8 w-68 border border-forest rounded-md flex flex-col items-center gap-4 justify-center">
         <Heading4 className="text-center text-sm">
@@ -131,7 +129,7 @@ export const CompleteRegister = ({ session }: CompleteRegisterProps) => {
         <Button
           className="cursor-pointer"
           onClick={() => {
-            navigate(paths.auth.login.path, { replace: true });
+            navigate(paths.auth.otp.path, { replace: true });
           }}
         >
           Ke halaman login
@@ -141,33 +139,38 @@ export const CompleteRegister = ({ session }: CompleteRegisterProps) => {
   }
 
   const onHandleSubmit = async (data: CompleteRegisterFormValues) => {
-    setFormError(null);
-
     if (!email) {
       return;
     }
 
     if (data.password !== data.confirmPassword) {
-      setFormError("password dan confirm password tidak sesuai");
       return;
     }
-
-    setSubmitLoading(true);
+    let argonOptions: { time: number; mem: number; parallelism: number } | undefined;
 
     try {
-      const registrationKey = await deriveRegistrationKey(data.password);
+      const argonConfig = await getArgonConfig();
 
-      setRegisterData({
-        email: email,
-        name: data.name,
-        authVerifier: registrationKey.authVerifier,
-        authVerifierSalt: registrationKey.authVerifierSalt,
-        masterKeySalt: registrationKey.masterKeySalt,
-        vaultKeySalt: registrationKey.vaultKeySalt,
-      });
-    } finally {
-      setSubmitLoading(false);
+      argonOptions = {
+        time: argonConfig.iteration,
+        mem: argonConfig.memory,
+        parallelism: argonConfig.parallelism,
+      };
+    } catch {
+      argonOptions = undefined;
     }
+
+    const registrationKey = await deriveRegistrationKey(data.password, argonOptions);
+
+    registerMutation.mutate({
+      session: session,
+      email: email,
+      name: data.name,
+      authVerifier: registrationKey.authVerifier,
+      vaultKeySalt: registrationKey.vaultKeySalt,
+      authVerifierSalt: registrationKey.authVerifierSalt,
+      masterKeySalt: registrationKey.masterKeySalt,
+    });
   };
 
   return (
@@ -182,8 +185,6 @@ export const CompleteRegister = ({ session }: CompleteRegisterProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        {formError && <p className="my-4 text-red-600">{formError}</p>}
-
         <Form
           id="complete-register-form"
           schema={completeRegisSchema}
@@ -255,13 +256,17 @@ export const CompleteRegister = ({ session }: CompleteRegisterProps) => {
           }}
         </Form>
         <Button
-          loading={submitLoading || (registerLoading ?? false)}
+          loading={registerMutation.isPending}
           type="submit"
           form="complete-register-form"
           className="w-full rounded-md cursor-pointer"
         >
           Daftar
         </Button>
+
+        {registerMutation.error && (
+          <p className="my-4 text-red-600">{registerMutation.error.message}</p>
+        )}
       </CardContent>
     </Card>
   );

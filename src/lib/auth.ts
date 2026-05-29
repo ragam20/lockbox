@@ -1,14 +1,24 @@
 import z from "zod";
 import { privateApi, publicApi } from "./api-client";
+import { useAppStore } from "./store";
+import { ApiError, type ApiResponse } from "@/types/response";
+import type { ArgonConfig, User, Vault } from "@/types/entity";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { maxRetry, queryClient } from "./react-query";
 
-export const loginInputSchema = z.object({
+export const authQueryKeys = {
+  user: ["auth", "user"] as const,
+  vault: ["auth", "vault"] as const,
+  argonConfig: ["auth", "argon-config"] as const,
+};
+
+export const unlockInputSchema = z.object({
   email: z.email(),
   verifier: z.string(),
 });
-export type LoginInputData = z.infer<typeof loginInputSchema>;
-export const login = async (data: LoginInputData) => {
-  const resp = await publicApi.post("/auth/login", data);
-  return resp;
+export type UnlockInputData = z.infer<typeof unlockInputSchema>;
+export const login = async (data: UnlockInputData) => {
+  await privateApi.post("/auth/unlock", data);
 };
 
 export const logout = async () => {
@@ -17,4 +27,67 @@ export const logout = async () => {
 
 export const refreshToken = async () => {
   await publicApi.get("/auth/refresh-token");
+};
+
+export const getArgonConfig = async () => {
+  const resp = await privateApi.get<unknown, ApiResponse<ArgonConfig>>(
+    "/vault/argon-config",
+  );
+
+  return resp.data;
+};
+
+export const getVault = async () => {
+  const resp = await privateApi.get<unknown, ApiResponse<Vault>>("/vault");
+  return resp.data;
+};
+
+export const getUser = async () => {
+  const resp = await privateApi.get<unknown, ApiResponse<User>>("/user");
+  return resp.data;
+};
+
+export const useGetUserQuery = () => {
+  return useQuery<User, ApiError>({
+    retry: maxRetry,
+    queryKey: authQueryKeys.user,
+    queryFn: getUser,
+  });
+};
+
+export const useGetVaultQuery = () => {
+  return useQuery<Vault, ApiError>({
+    retry: maxRetry,
+    queryKey: authQueryKeys.vault,
+    queryFn: getVault,
+  });
+};
+
+export const useGetArgonConfigQuery = () => {
+  return useQuery<ArgonConfig, ApiError>({
+    retry: maxRetry,
+    queryKey: authQueryKeys.argonConfig,
+    queryFn: getArgonConfig,
+  });
+};
+
+export const useLogout = () => {
+  const store = useAppStore();
+
+  const doLogout = async () => {
+    await logout();
+    queryClient.removeQueries({ queryKey: ["auth"] });
+    store.clearApp();
+  };
+
+  return {
+    logout: doLogout,
+  };
+};
+
+export const useLogin = () => {
+  return useMutation<void, ApiError, UnlockInputData>({
+    retry: false,
+    mutationFn: login,
+  });
 };

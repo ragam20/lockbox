@@ -11,7 +11,7 @@ export const CompleteRegisterRoute = () => {
   const session = searchParams.get("session");
 
   if (!session) {
-    return <Navigate to={paths.auth.register.path} />;
+    return <Navigate to={paths.auth.register.getHref()} />;
   }
 
   return (

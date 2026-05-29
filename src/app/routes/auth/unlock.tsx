@@ -2,18 +2,15 @@ import { SmokeEffect } from "@/components/effects/smoke-effect";
 import { Head } from "@/components/seo/head";
 import { BodyText, Heading5 } from "@/components/typography";
 import { paths } from "@/config/paths";
-import { LoginForm } from "@/features/auth/components/login-form";
+import { UnlockForm } from "@/features/auth/components/unlock-form";
 import { useNavigate } from "react-router";
 
-export const LoginRoute = () => {
+export const UnlockRoute = () => {
   const navigate = useNavigate();
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">
-      <Head
-        title="Masuk"
-        description="Masuk ke lockbox untuk mengatur password kamu."
-      />
+      <Head title="Masuk" description="" />
 
       <header className="relative z-10 border-b">
         <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
@@ -32,7 +29,7 @@ export const LoginRoute = () => {
       </header>
 
       <main className="relative z-10 flex items-center justify-center h-180">
-        <LoginForm />
+        <UnlockForm />
       </main>
 
       <SmokeEffect />

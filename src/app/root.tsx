@@ -10,3 +10,11 @@ export const AppRoot = () => {
     </>
   );
 };
+
+export const AuthRoot = () => {
+  return (
+    <>
+      <Outlet />
+    </>
+  );
+};

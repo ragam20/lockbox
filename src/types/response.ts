@@ -2,12 +2,24 @@ import type { ISOStringFormat } from "date-fns";
 
 export class ApiError extends Error {
   status?: number;
+  code: string;
   timestamp: ISOStringFormat;
 
-  constructor(message: string, status: number, timestamp: ISOStringFormat) {
+  constructor(
+    code: string,
+    message: string,
+    status: number,
+    timestamp: ISOStringFormat,
+  ) {
     super(message);
+
+    this.name = "ApiError";
+
+    this.code = code;
     this.status = status;
     this.timestamp = timestamp;
+
+    Object.setPrototypeOf(this, ApiError.prototype);
   }
 }
 
@@ -24,4 +36,13 @@ export type GetRegisterSessionReponse = {
 
 export type VerifyEmailResponse = {
   session: string;
+};
+
+export type RequestOtpResponse = {
+  expiresIn: number;
+};
+
+export type VerifyOtpResponse = {
+  email: string;
+  isVerified: boolean;
 };
