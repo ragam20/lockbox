@@ -26,7 +26,7 @@ export const LandingRoute = () => {
           <div className="flex shrink-0 gap-3">
             <Button
               onClick={() => {
-                navigate(paths.auth.login.path);
+                navigate(paths.auth.otp.path);
               }}
               className="text-void bg-[#d4d4d8] py-4 px-8 rounded-md cursor-pointer hover:bg-white"
             >
@@ -55,9 +55,9 @@ export const LandingRoute = () => {
               <Typewriter
                 options={{
                   strings: [
-                    "“Zero-Knowledge Security”",
-                    "“Keamanan di tangan kamu. Privasi tetap milik kamu.”",
                     "“Berhenti pusing mikirin banyak password.”",
+                    "“Data kamu terenkripsi dengan baik”",
+                    "“Keamanan di tangan kamu. Privasi tetap milik kamu.”",
                   ],
                   autoStart: true,
                   loop: true,
@@ -73,7 +73,7 @@ export const LandingRoute = () => {
           </BodyText>
           <Button
             onClick={() => {
-              navigate(paths.auth.login.path);
+              navigate(paths.auth.otp.path);
             }}
             variant={"outline"}
             className="mt-4 mx-auto border-neon-green p-6 px-16 rounded-md cursor-pointer w-fit hover:bg-neon-green hover:text-void"

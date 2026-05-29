@@ -10,7 +10,7 @@ export const ErrorBoundaryRoute = () => {
   const isNotFound = isRouteErrorResponse(error) && error.status === 404;
   const message = isNotFound
     ? "Halaman yang kamu cari tidak ditemukan."
-    : "Terjadi kesalahan yang tidak terduga.";
+    : "Opss, terjadi kesalahan.";
 
   return (
     <div className="w-250 min-h-screen mx-auto flex flex-col gap-4 items-center justify-center">

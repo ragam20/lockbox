@@ -1,7 +1,7 @@
 import { publicApi } from "@/lib/api-client";
-import { ApiError } from "@/types/response";
-import { useEffect, useState } from "react";
+import { ApiError, type ApiResponse } from "@/types/response";
 import z from "zod";
+import { useMutation } from "@tanstack/react-query";
 
 export const registerInputSchema = z.object({
   email: z.email(),
@@ -11,50 +11,20 @@ export const registerInputSchema = z.object({
   masterKeySalt: z.string(),
   vaultKeySalt: z.string(),
 });
-export type RegisterInputData = z.infer<typeof registerInputSchema>;
-export const register = async (data: RegisterInputData, session: string) => {
-  await publicApi.post("/auth/register", data, {
+export type RegisterInputData = z.infer<typeof registerInputSchema> & {
+  session: string;
+};
+export const register = async ({ session, ...data }: RegisterInputData) => {
+  await publicApi.post<ApiResponse<unknown>>("/auth/register", data, {
     params: {
       session,
     },
   });
 };
 
-export const useRegister = (session: string) => {
-  const [registerLoading, setRegisterLoading] = useState<boolean | null>(null);
-  const [registerData, setRegisterData] = useState<RegisterInputData | null>(
-    null,
-  );
-  const [registerError, setRegisterError] = useState<string | null>(null);
-  const [successMessage, setSucessMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!registerData) {
-      return;
-    }
-
-    const fetch = async () => {
-      setRegisterLoading(true);
-      try {
-        await register(registerData, session);
-        setSucessMessage("Berhasil daftar");
-      } catch (err) {
-        console.log(err);
-        if (err instanceof ApiError) {
-          setRegisterError(err.message);
-        }
-      } finally {
-        setRegisterLoading(null);
-      }
-    };
-
-    fetch();
-  }, [session, registerData]);
-
-  return {
-    setRegisterData,
-    successMessage,
-    registerError,
-    registerLoading,
-  };
+export const useRegister = () => {
+  return useMutation<void, ApiError, RegisterInputData>({
+    retry: false,
+    mutationFn: register,
+  });
 };
