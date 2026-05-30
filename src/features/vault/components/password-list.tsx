@@ -1,5 +1,5 @@
 import { useState, type ComponentType } from "react";
-import type { VaultItemPassword as VaultItemPassword } from "@/types/api";
+import type { VaultItemPassword as VaultItemPassword } from "@/types/entity";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

@@ -15,7 +15,7 @@ import { PricingRoute } from "./routes/app/pricing/page";
 import { CompleteRegisterRoute } from "./routes/auth/complete-register";
 import { VerifyEmailRoute } from "./routes/auth/verify-email";
 import { OtpRoute } from "./routes/auth/otp";
-import { AuthLayout, ProtectedLayout } from "@/lib/layout";
+import { AuthLayout, ProtectedLayout } from "@/lib/guard-layout";
 
 const createAppRouter = createBrowserRouter([
   {

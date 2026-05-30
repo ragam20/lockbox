@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
-
+import type { VaultItemPassword, VaultItemNote } from "@/types/entity";
 import { NoteIcon } from "@phosphor-icons/react";
 import {
   EllipsisIcon,
@@ -145,7 +145,7 @@ export const ArchiveList = () => {
               </button>
 
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger>
                   <Button
                     type="button"
                     variant="ghost"

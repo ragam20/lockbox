@@ -18,6 +18,10 @@ export const AuthLayout = ({ children }: { children: React.ReactNode }) => {
     }
   }, [appStore.auth, userQuery.data, userQuery.isSuccess]);
 
+  if (userQuery.isPending) {
+    return <p>Loading ...</p>;
+  }
+
   if (userQuery.isSuccess) {
     return <Navigate to={paths.unlock.path} replace />;
   }

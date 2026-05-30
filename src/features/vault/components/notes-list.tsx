@@ -1,4 +1,4 @@
-import type { VaultItemNote } from "@/types/api";
+import type { VaultItemNote } from "@/types/entity";
 import { Button } from "@/components/ui/button";
 import { BodyText } from "@/components/typography";
 import {

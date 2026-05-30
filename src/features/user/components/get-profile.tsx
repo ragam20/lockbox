@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
+import { Button, SubmitButton } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
-import type { User } from "@/types/api";
+import type { User } from "@/types/entity";
 import z from "zod";
 import { SetAvatar } from "./set-avatar";
 
@@ -15,6 +15,8 @@ export const Profile = () => {
     id: "1",
     name: "Sylla Bear",
     email: "sylla@gmail.com",
+    masterKeySalt: "",
+    authVerifierSalt: "",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
@@ -66,7 +68,7 @@ export const Profile = () => {
                     Batalkan
                   </Button>
 
-                  <Button type="submit">Ubah</Button>
+                  <SubmitButton type="submit">Ubah</SubmitButton>
                 </div>
               )}
             </>

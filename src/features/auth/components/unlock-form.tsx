@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Form, PasswordFormField } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/button";
 import { Heading3 } from "@/components/typography";
 import { useEffect, useState } from "react";
 import { z } from "zod";
@@ -16,6 +16,7 @@ import {
   useGetVaultQuery,
   useGetArgonConfigQuery,
   useGetUserQuery,
+  useLogout,
 } from "@/lib/auth";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/errors/messages";
@@ -47,6 +48,7 @@ export const UnlockForm = () => {
   const vaultQuery = useGetVaultQuery();
 
   const loginMutation = useLogin();
+  const { logout } = useLogout();
 
   useEffect(() => {
     if (loginMutation.isSuccess) {
@@ -97,19 +99,18 @@ export const UnlockForm = () => {
       masterKey: masterKey.hash,
     });
 
-    loginMutation.mutateAsync({
-      email: userQuery.data.email,
-      verifier: authVerifier,
-    });
-
-    if (loginMutation.isSuccess) {
-      navigate(paths.app.root.path, { replace: true });
-    }
+    loginMutation.mutateAsync(
+      {
+        email: userQuery.data.email,
+        verifier: authVerifier,
+      },
+      {
+        onSuccess: () => {
+          navigate(paths.app.root.path, { replace: true });
+        },
+      },
+    );
   };
-
-  if (!appStore.auth.isAuthenticated) {
-    return <Navigate to={paths.auth.otp.path} replace />;
-  }
 
   const isLoading =
     argonConfigQuery.isPending || userQuery.isPending || vaultQuery.isPending;
@@ -118,51 +119,64 @@ export const UnlockForm = () => {
     return <p>Loading...</p>;
   }
 
-  return (
-    <Card className="w-90 border border-forest rounded-md ">
-      <CardHeader>
-        <CardTitle className="text-center">
-          <Heading3 className="font-bold">Masuk</Heading3>
-          <CardDescription>
-            Selamat datang {userQuery.data?.email}
-          </CardDescription>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-2">
-        <Form id="unlock-form" schema={loginSchema} onSubmit={onSubmitForm}>
-          {({ register, errors }) => (
-            <>
-              <PasswordFormField
-                label="Password"
-                error={errors.password}
-                showPassword={showPassword}
-                setShowPassword={setShowPassword}
-              >
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="masukkan password"
-                  className={cn("rounded-md")}
-                  {...register("password")}
-                />
-              </PasswordFormField>
-            </>
-          )}
-        </Form>
-        <Button
-          loading={loginMutation.isPending}
-          type="submit"
-          form="unlock-form"
-          className="w-full rounded-md cursor-pointer"
-        >
-          Submit
-        </Button>
+  if (userQuery.isError) {
+    return <Navigate to={paths.auth.otp.path} replace />;
+  }
 
-        {loginMutation.error && (
-          <p className="my-4 text-red-600">
-            {getErrorMessage(loginMutation.error.code)}
-          </p>
-        )}
-      </CardContent>
-    </Card>
+  return (
+    <div className="flex flex-col gap-5">
+      <Card className="w-90 border border-forest rounded-md ">
+        <CardHeader>
+          <CardTitle className="text-center">
+            <Heading3 className="font-bold">Masuk</Heading3>
+            <CardDescription>
+              Selamat datang kembali{" "}
+              <span className="font-extrabold text-neon-green">
+                {userQuery.data?.email}
+              </span>
+            </CardDescription>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-2">
+          <Form id="unlock-form" schema={loginSchema} onSubmit={onSubmitForm}>
+            {({ register, errors }) => (
+              <>
+                <PasswordFormField
+                  label="Password"
+                  error={errors.password}
+                  showPassword={showPassword}
+                  setShowPassword={setShowPassword}
+                >
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="masukkan password"
+                    className={cn("rounded-md")}
+                    {...register("password")}
+                  />
+                </PasswordFormField>
+              </>
+            )}
+          </Form>
+          <SubmitButton
+            loading={loginMutation.isPending}
+            type="submit"
+            form="unlock-form"
+            className="w-full rounded-md cursor-pointer"
+          >
+            Submit
+          </SubmitButton>
+
+          {loginMutation.error && (
+            <p className="my-4 text-red-600">
+              {getErrorMessage(loginMutation.error.code)}
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
+      <p className="text-red-600 text-center cursor-pointer" onClick={logout}>
+        Logout
+      </p>
+    </div>
   );
 };
