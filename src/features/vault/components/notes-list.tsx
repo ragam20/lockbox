@@ -18,33 +18,44 @@ import { AppPagination } from "@/components/ui/pagination/app-pagination";
 import { useState, type ComponentType } from "react";
 import { NoteIcon } from "@phosphor-icons/react";
 import { EditNote } from "./edit-note";
-import { Link } from "react-router";
+import { DetailNote } from "./detail-note";
 
 const dummyNoteList: VaultItemNote[] = [
   {
     id: "1",
     title: "My Dairy 1",
-    description: "hi",
+    description:
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: "2",
     title: "My Dairy 2",
     description: "hi",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: "3",
     title: "My Dairy 3",
     description: "hi",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: "4",
     title: "My Dairy 4",
     description: "hi",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: "5",
     title: "My Dairy 5",
     description: "hi",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
 ];
 
@@ -66,14 +77,21 @@ export const NotesList = () => {
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(dummyNoteList);
   const [editingItem, setEditingItem] = useState<VaultItemNote | null>(null);
+  const [detailItem, setDetailItem] = useState<VaultItemNote | null>(null);
 
   const actionMap = {
     edit: (v: VaultItemNote) => {
       setEditingItem(v);
     },
-    favorite: (_v: VaultItemNote) => {},
-    archive: (_v: VaultItemNote) => {},
-    delete: (_v: VaultItemNote) => {},
+    favorite: (v: VaultItemNote) => {
+      void v;
+    },
+    archive: (v: VaultItemNote) => {
+      void v;
+    },
+    delete: (v: VaultItemNote) => {
+      void v;
+    },
   } as const;
 
   return (
@@ -93,13 +111,26 @@ export const NotesList = () => {
         }}
       />
 
+      <DetailNote
+        open={Boolean(detailItem)}
+        item={detailItem}
+        onOpenChange={(state) => {
+          if (!state) setDetailItem(null);
+        }}
+      />
+
       <ul className="flex min-w-0 flex-col gap-4">
         {items.map((item) => (
           <li
             key={item.id}
             className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
           >
-            <Link to={""} className="flex min-w-0 flex-1 items-center gap-4">
+            <div
+              onClick={() => {
+                setDetailItem(item);
+              }}
+              className="cursor-pointer flex min-w-0 flex-1 items-center gap-4"
+            >
               {item.iconURL ? (
                 <img
                   src={item.iconURL}
@@ -113,7 +144,7 @@ export const NotesList = () => {
               <BodyText className="min-w-0 flex-1 truncate">
                 {item.title}
               </BodyText>
-            </Link>
+            </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

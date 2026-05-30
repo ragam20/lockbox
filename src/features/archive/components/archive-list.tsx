@@ -17,7 +17,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useState, type ComponentType } from "react";
-import { Link } from "react-router";
+import { VaultItemDetail } from "@/features/vault/components/detail-vault-item";
 
 type ArchiveWebItem = VaultItemPassword & {
   type: "web";
@@ -26,7 +26,6 @@ type ArchiveWebItem = VaultItemPassword & {
 type ArchiveNoteItem = VaultItemNote & {
   type: "note";
 };
-
 type ArchiveVaultItem = ArchiveWebItem | ArchiveNoteItem;
 type ArchiveVaultItemType = ArchiveVaultItem["type"];
 
@@ -87,6 +86,7 @@ const dummyArchiveList: ArchiveVaultItem[] = [
 export const ArchiveList = () => {
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(dummyArchiveList);
+  const [detailItem, setDetailItem] = useState<ArchiveVaultItem | null>(null);
 
   const removeItem = (selectedItem: ArchiveVaultItem) => {
     setItems((currentItems) =>
@@ -108,6 +108,14 @@ export const ArchiveList = () => {
 
   return (
     <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden">
+      <VaultItemDetail
+        open={Boolean(detailItem)}
+        item={detailItem}
+        onOpenChange={(state) => {
+          if (!state) setDetailItem(null);
+        }}
+      />
+
       <ul className="flex min-w-0 flex-col gap-4">
         {items.map((item) => {
           const config = archiveTypeConfig[item.type];
@@ -118,7 +126,11 @@ export const ArchiveList = () => {
               key={`${item.type}-${item.id}`}
               className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
             >
-              <Link to={""} className="flex min-w-0 flex-1 items-center gap-4">
+              <button
+                type="button"
+                onClick={() => setDetailItem(item)}
+                className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 bg-transparent p-0 text-left text-inherit"
+              >
                 {"iconURL" in item && item.iconURL ? (
                   <img
                     src={item.iconURL}
@@ -132,7 +144,7 @@ export const ArchiveList = () => {
                 <BodyText className="min-w-0 flex-1 truncate">
                   {item.title}
                 </BodyText>
-              </Link>
+              </button>
 
               <DropdownMenu>
                 <DropdownMenuTrigger>

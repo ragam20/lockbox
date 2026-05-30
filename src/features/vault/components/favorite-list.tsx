@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
-import type { VaultItemPassword, VaultItemNote } from "@/types/entity";
+
 import { NoteIcon } from "@phosphor-icons/react";
 import {
   ArchiveIcon,
@@ -22,16 +22,13 @@ import {
 import { useState, type ComponentType } from "react";
 import { EditPassword } from "./edit-password";
 import { EditNote } from "./edit-note";
-import { Link } from "react-router";
+import {
+  VaultItemDetail,
+  type VaultDetailItemByType,
+} from "./detail-vault-item";
 
-type FavoriteWebItem = VaultItemPassword & {
-  type: "web";
-};
-
-type FavoriteNoteItem = VaultItemNote & {
-  type: "note";
-};
-
+type FavoriteWebItem = VaultDetailItemByType["web"];
+type FavoriteNoteItem = VaultDetailItemByType["note"];
 type FavoriteVaultItem = FavoriteWebItem | FavoriteNoteItem;
 type FavoriteVaultItemType = FavoriteVaultItem["type"];
 
@@ -117,6 +114,7 @@ export const FavoriteList = () => {
   );
   const [editingNoteItem, setEditingNoteItem] =
     useState<FavoriteNoteItem | null>(null);
+  const [detailItem, setDetailItem] = useState<FavoriteVaultItem | null>(null);
 
   const handleCopy = async (text: string) => {
     try {
@@ -148,9 +146,15 @@ export const FavoriteList = () => {
 
       if (isFavoriteNoteItem(item)) setEditingNoteItem(item);
     },
-    favorite: (_item: FavoriteVaultItem) => {},
-    archive: (_item: FavoriteVaultItem) => {},
-    delete: (_item: FavoriteVaultItem) => {},
+    favorite: (item: FavoriteVaultItem) => {
+      void item;
+    },
+    archive: (item: FavoriteVaultItem) => {
+      void item;
+    },
+    delete: (item: FavoriteVaultItem) => {
+      void item;
+    },
   } satisfies Record<FavoriteAction, (item: FavoriteVaultItem) => void>;
 
   return (
@@ -177,6 +181,14 @@ export const FavoriteList = () => {
         }}
       />
 
+      <VaultItemDetail
+        open={Boolean(detailItem)}
+        item={detailItem}
+        onOpenChange={(state) => {
+          if (!state) setDetailItem(null);
+        }}
+      />
+
       <ul className="flex min-w-0 flex-col gap-4">
         {items.map((item) => {
           const config = favoriteTypeConfig[item.type];
@@ -187,7 +199,11 @@ export const FavoriteList = () => {
               key={`${item.type}-${item.id}`}
               className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
             >
-              <Link to={""} className="flex min-w-0 flex-1 items-center gap-4">
+              <button
+                type="button"
+                onClick={() => setDetailItem(item)}
+                className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 bg-transparent p-0 text-left text-inherit"
+              >
                 {"iconURL" in item && item.iconURL ? (
                   <img
                     src={item.iconURL}
@@ -201,7 +217,7 @@ export const FavoriteList = () => {
                 <BodyText className="min-w-0 flex-1 truncate">
                   {item.title}
                 </BodyText>
-              </Link>
+              </button>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
