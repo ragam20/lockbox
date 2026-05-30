@@ -257,13 +257,13 @@ export const FavoriteList = () => {
         })}
       </ul>
 
-      <AppPagination
-        page={page}
-        onPageChange={(p) => {
-          setPage(p);
-        }}
-        totalPages={10}
-      />
+      {/* <AppPagination */}
+      {/*   page={page} */}
+      {/*   onPageChange={(p) => { */}
+      {/*     setPage(p); */}
+      {/*   }} */}
+      {/*   totalPages={10} */}
+      {/* /> */}
     </div>
   );
 };
