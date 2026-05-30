@@ -12,9 +12,5 @@ export const AppRoot = () => {
 };
 
 export const AuthRoot = () => {
-  return (
-    <>
-      <Outlet />
-    </>
-  );
+  return <Outlet />;
 };

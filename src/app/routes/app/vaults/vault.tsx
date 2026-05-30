@@ -20,8 +20,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
-
 import { CreateNote } from "@/features/vault/components/create-note";
+
 type VaultSection = {
   value: string;
   title: string;

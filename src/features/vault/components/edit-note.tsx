@@ -1,5 +1,5 @@
 import { Heading5 } from "@/components/typography";
-import { Button } from "@/components/ui/button";
+import { Button, SubmitButton } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form, FormField } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
-import type { VaultItemNote } from "@/types/api";
+import type { VaultItemNote } from "@/types/entity";
 import { z } from "zod";
 
 const editNoteSchema = z.object({
@@ -89,13 +89,13 @@ export const EditNote = ({
           >
             Batal
           </Button>
-          <Button
+          <SubmitButton
             type="submit"
             form="edit-note-id"
             className="w-full cursor-pointer rounded-md xl:w-fit"
           >
             Simpan
-          </Button>
+          </SubmitButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

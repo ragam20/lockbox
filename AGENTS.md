@@ -13,13 +13,16 @@ lockbox
 │ ├─components
 │ ├─config
 │ ├─features
-│ │ ├─auth
 │ │ ├─archive
+│ │ ├─auth
 │ │ ├─tools
-│ │ ├─(and more...)
+│ │ ├─user
+│ │ ├─vault
 │ ├─hooks
 │ ├─lib
 │ ├─types
+│ ├─index.css
+│ ├─main.tsx
 ```
 
 `app`
