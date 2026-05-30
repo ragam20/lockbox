@@ -17,13 +17,15 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useState, type ComponentType } from "react";
-import {
-  VaultItemDetail,
-  type VaultDetailItemByType,
-} from "@/features/vault/components/detail-vault-item";
+import { VaultItemDetail } from "@/features/vault/components/detail-vault-item";
 
-type ArchiveWebItem = VaultDetailItemByType["web"];
-type ArchiveNoteItem = VaultDetailItemByType["note"];
+type ArchiveWebItem = VaultItemPassword & {
+  type: "web";
+};
+
+type ArchiveNoteItem = VaultItemNote & {
+  type: "note";
+};
 type ArchiveVaultItem = ArchiveWebItem | ArchiveNoteItem;
 type ArchiveVaultItemType = ArchiveVaultItem["type"];
 

@@ -1,18 +1,22 @@
 import { BodyText, Heading5 } from "@/components/typography";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import type { VaultItemLogin } from "@/types/api";
+import type { VaultItemPassword } from "@/types/entity";
 import { CheckIcon, CopyIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-type DetailLoginProps = {
+type DetailPasswordProps = {
   open: boolean;
   onOpenChange: (state: boolean) => void;
-  item: VaultItemLogin | null;
+  item: VaultItemPassword | null;
 };
 
-export const DetailLogin = ({ open, onOpenChange, item }: DetailLoginProps) => {
+export const DetailPassword = ({
+  open,
+  onOpenChange,
+  item,
+}: DetailPasswordProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
 

@@ -1,6 +1,7 @@
 import { BodyText, Heading5 } from "@/components/typography";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-import type { VaultItemNote } from "@/types/api";
+
+import type { VaultItemNote } from "@/types/entity";
 
 type DetailNoteProps = {
   open: boolean;

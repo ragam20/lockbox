@@ -1,9 +1,9 @@
-import type { VaultItemLogin, VaultItemNote } from "@/types/api";
-import { DetailLogin } from "./detail-login";
+import type { VaultItemPassword, VaultItemNote } from "@/types/entity";
+import { DetailPassword } from "./detail-password";
 import { DetailNote } from "./detail-note";
 
 export type VaultDetailItemByType = {
-  web: VaultItemLogin & { type: "web" };
+  web: VaultItemPassword & { type: "web" };
   note: VaultItemNote & { type: "note" };
 };
 
@@ -25,7 +25,7 @@ export const VaultItemDetail = ({
 
   if (item.type === "web") {
     return (
-      <DetailLogin open={open} onOpenChange={onOpenChange} item={item} />
+      <DetailPassword open={open} onOpenChange={onOpenChange} item={item} />
     );
   }
 

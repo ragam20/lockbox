@@ -1,5 +1,5 @@
 import { useState, type ComponentType } from "react";
-import type { VaultItemPassword as VaultItemPassword } from "@/types/entity";
+import type { VaultItemPassword } from "@/types/entity";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,8 +19,7 @@ import {
 } from "lucide-react";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
 import { EditPassword } from "./edit-password";
-import { Link } from "react-router";
-import { DetailLogin } from "./detail-login";
+import { DetailPassword } from "./detail-password";
 
 const dummyWebList: VaultItemPassword[] = [
   {
@@ -78,7 +77,7 @@ export const PasswordList = () => {
   const [editingItem, setEditingItem] = useState<VaultItemPassword | null>(
     null,
   );
-
+  const [detailItem, setDetailItem] = useState<VaultItemPassword | null>(null);
   const handleCopy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -116,7 +115,7 @@ export const PasswordList = () => {
         }}
       />
 
-      <DetailLogin
+      <DetailPassword
         open={Boolean(detailItem)}
         item={detailItem}
         onOpenChange={(state) => {
