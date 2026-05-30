@@ -5,17 +5,17 @@ import { getErrorMessage } from "./errors/messages";
 import { paths } from "@/config/paths";
 import type { ISOStringFormat } from "date-fns";
 
-const axioBaseConfig = {
+const axiosBaseConfig = {
   baseURL: env.API_URL,
-  timeout: 5000,
+  timeout: 5500,
   headers: {
     "Content-Type": "application/json",
   },
   withCredentials: true,
 };
 
-export const privateApi = axios.create(axioBaseConfig);
-export const publicApi = axios.create(axioBaseConfig);
+export const privateApi = axios.create(axiosBaseConfig);
+export const publicApi = axios.create(axiosBaseConfig);
 
 publicApi.interceptors.response.use(
   (response) => {
@@ -69,7 +69,7 @@ privateApi.interceptors.response.use(
       try {
         if (!refreshPromise) {
           refreshPromise = publicApi
-            .get("/auth/refresh-token")
+            .post("/auth/refresh-token")
             .then(() => undefined)
             .finally(() => {
               refreshPromise = null;

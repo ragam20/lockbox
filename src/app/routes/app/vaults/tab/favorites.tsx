@@ -21,10 +21,7 @@ export const FavoriteSection = () => {
             placeholder="cari favorite ..."
             className="py-4.5 rounded-md"
           />
-          <Button
-            type="submit"
-            className="py-4 px-6 rounded-md cursor-pointer"
-          >
+          <Button type="submit" className="py-4 px-6 rounded-md cursor-pointer">
             Cari
           </Button>
         </form>

@@ -1,6 +1,6 @@
 import { UserAvatar } from "@/components/ui/avatar/user-avatar";
-import { Button } from "@/components/ui/button";
-import type { User } from "@/types/api";
+import { SubmitButton } from "@/components/ui/button";
+import type { User } from "@/types/entity";
 import { CameraIcon } from "lucide-react";
 import type { ChangeEvent } from "react";
 import { useEffect, useId, useState } from "react";
@@ -38,7 +38,7 @@ export const SetAvatar = ({ user, onChange }: SetAvatarProps) => {
     <div className="relative mx-auto mb-8 size-36">
       <UserAvatar
         user={profileUser}
-        className="size-full [&_[data-slot=avatar-fallback]]:text-4xl"
+        className="size-full **:data-[slot=avatar-fallback]:text-4xl"
       />
 
       <input
@@ -49,8 +49,7 @@ export const SetAvatar = ({ user, onChange }: SetAvatarProps) => {
         onChange={handleAvatarChange}
       />
 
-      <Button
-        asChild
+      <SubmitButton
         size="icon-sm"
         className="absolute right-2 bottom-2 rounded-full bg-void/90 text-white shadow-md hover:bg-forest"
         aria-label="Pilih foto profil"
@@ -58,7 +57,7 @@ export const SetAvatar = ({ user, onChange }: SetAvatarProps) => {
         <label htmlFor={avatarInputId} className="cursor-pointer">
           <CameraIcon className="size-4" />
         </label>
-      </Button>
+      </SubmitButton>
     </div>
   );
 };

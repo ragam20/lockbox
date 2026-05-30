@@ -10,7 +10,7 @@ export const UnlockRoute = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black">
-      <Head title="Masuk" description="" />
+      <Head title="Buka brangkas" description="" />
 
       <header className="relative z-10 border-b">
         <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
@@ -28,7 +28,7 @@ export const UnlockRoute = () => {
         </nav>
       </header>
 
-      <main className="relative z-10 flex items-center justify-center h-180">
+      <main className="relative z-10 flex items-center justify-center md:h-140 h-160">
         <UnlockForm />
       </main>
 

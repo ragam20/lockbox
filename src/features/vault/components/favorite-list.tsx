@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
-import type { VaultItemPassword, VaultItemNote } from "@/types/api";
+import type { VaultItemPassword, VaultItemNote } from "@/types/entity";
 import { NoteIcon } from "@phosphor-icons/react";
 import {
   ArchiveIcon,
@@ -241,13 +241,13 @@ export const FavoriteList = () => {
         })}
       </ul>
 
-      <AppPagination
-        page={page}
-        onPageChange={(p) => {
-          setPage(p);
-        }}
-        totalPages={10}
-      />
+      {/* <AppPagination */}
+      {/*   page={page} */}
+      {/*   onPageChange={(p) => { */}
+      {/*     setPage(p); */}
+      {/*   }} */}
+      {/*   totalPages={10} */}
+      {/* /> */}
     </div>
   );
 };

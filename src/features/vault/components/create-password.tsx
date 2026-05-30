@@ -1,5 +1,5 @@
 import { Heading5 } from "@/components/typography";
-import { Button } from "@/components/ui/button";
+import { Button, SubmitButton } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -95,9 +95,9 @@ export const CreatePassword = ({ open, onOpenChange }: CreateLoginProps) => {
           >
             Batal
           </Button>
-          <Button className="w-full cursor-pointer rounded-md xl:w-fit">
+          <SubmitButton className="w-full cursor-pointer rounded-md xl:w-fit">
             Buat
-          </Button>
+          </SubmitButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -26,7 +26,7 @@ export const logout = async () => {
 };
 
 export const refreshToken = async () => {
-  await publicApi.get("/auth/refresh-token");
+  await publicApi.post("/auth/refresh-token");
 };
 
 export const getArgonConfig = async () => {

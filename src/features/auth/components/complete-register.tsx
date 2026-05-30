@@ -1,5 +1,5 @@
 import { BodyText, Heading3, Heading4 } from "@/components/typography";
-import { Button } from "@/components/ui/button";
+import { Button, SubmitButton } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -146,7 +146,9 @@ export const CompleteRegister = ({ session }: CompleteRegisterProps) => {
     if (data.password !== data.confirmPassword) {
       return;
     }
-    let argonOptions: { time: number; mem: number; parallelism: number } | undefined;
+    let argonOptions:
+      | { time: number; mem: number; parallelism: number }
+      | undefined;
 
     try {
       const argonConfig = await getArgonConfig();
@@ -160,7 +162,10 @@ export const CompleteRegister = ({ session }: CompleteRegisterProps) => {
       argonOptions = undefined;
     }
 
-    const registrationKey = await deriveRegistrationKey(data.password, argonOptions);
+    const registrationKey = await deriveRegistrationKey(
+      data.password,
+      argonOptions,
+    );
 
     registerMutation.mutate({
       session: session,
@@ -255,14 +260,14 @@ export const CompleteRegister = ({ session }: CompleteRegisterProps) => {
             );
           }}
         </Form>
-        <Button
+        <SubmitButton
           loading={registerMutation.isPending}
           type="submit"
           form="complete-register-form"
           className="w-full rounded-md cursor-pointer"
         >
           Daftar
-        </Button>
+        </SubmitButton>
 
         {registerMutation.error && (
           <p className="my-4 text-red-600">{registerMutation.error.message}</p>

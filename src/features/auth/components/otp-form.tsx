@@ -1,5 +1,5 @@
 import { BodyText, Heading5 } from "@/components/typography";
-import { Button } from "@/components/ui/button";
+import { Button, SubmitButton } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -227,14 +227,14 @@ const RequestOtp = ({
         <Button type="button" variant="outline" disabled className="rounded-md">
           Kembali
         </Button>
-        <Button
+        <SubmitButton
           loading={isLoading}
           type="submit"
           form="request-otp-form"
           className="rounded-md cursor-pointer"
         >
           Request OTP
-        </Button>
+        </SubmitButton>
       </div>
 
       <BodyText className="text-white text-xs mt-4 text-center">
@@ -349,7 +349,7 @@ const VerifyOtp = ({
           >
             Kembali
           </Button>
-          <Button
+          <SubmitButton
             loading={isLoading}
             type="submit"
             form="verify-otp-form"
@@ -357,7 +357,7 @@ const VerifyOtp = ({
             className="rounded-md cursor-pointer"
           >
             Verifikasi
-          </Button>
+          </SubmitButton>
         </div>
       )}
     </>

@@ -24,6 +24,8 @@ import { BodyText, Heading3 } from "../typography";
 import { NavLink, useNavigate } from "react-router";
 import { UserAvatar } from "../ui/avatar/user-avatar";
 import { AvatarDropdown } from "../ui/popover/avatar-dropdown";
+import { useGetUserQuery, useLogout } from "@/lib/auth";
+import { useAppStore } from "@/lib/store";
 
 type DashboardMenu = {
   title: string;
@@ -38,7 +40,7 @@ const dashboardMenus: DashboardMenu[] = [
   {
     title: "Brankas",
     icon: BookKeyIcon,
-    href: paths.app.vault.getHref(),
+    href: paths.app.vault.path,
     end: true,
   },
   {
@@ -69,6 +71,10 @@ export const AppSidebar = () => {
   const { isMobile, setOpenMobile } = useSidebar();
   const navigate = useNavigate();
 
+  const userQuery = useGetUserQuery();
+  const appStore = useAppStore();
+  const { logout } = useLogout();
+
   return (
     <Sidebar collapsible="icon" className="group">
       <SidebarHeader className="p-4">
@@ -78,25 +84,22 @@ export const AppSidebar = () => {
       </SidebarHeader>
       <SidebarContent className="bg-void">
         <AvatarDropdown
+          lock={() => {
+            appStore.appCrypto.clear();
+          }}
           accountSetting={() => {
             navigate(paths.app.accountSetting.path);
           }}
           logout={() => {
-            navigate(paths.landing.path);
+            logout();
+            navigate(paths.landing.path, { replace: true });
           }}
         >
           <div className="flex gap-2 p-2 mb-4 cursor-pointer items-center w-full hover:bg-forest">
-            <UserAvatar
-              user={{
-                id: "1",
-                name: "Sylla Bear",
-                email: "sylla@gmail.com",
-                imgURL: "",
-              }}
-            />
+            <UserAvatar user={userQuery.data} />
 
             <BodyText className="flex-1 text-start truncate group-data-[state=collapsed] text-sm">
-              Sylla
+              {userQuery.data?.name}
             </BodyText>
 
             <ChevronDownIcon className="size-4" />
