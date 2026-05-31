@@ -52,3 +52,5 @@ export type VaultItemNote = Entity<{
   createdAt?: ISOStringFormat | string;
   updatedAt?: ISOStringFormat | string;
 }>;
+
+export const VAULT_ITEM_TYPE = ["note", "password"] as const;
