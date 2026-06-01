@@ -53,7 +53,7 @@ const isAuthRoute = (pathname: string) => {
 };
 
 privateApi.interceptors.response.use(
-  (response) => response.data,
+  (response) => response,
   async (err: AxiosError) => {
     const status = err.response?.status;
 

@@ -1,4 +1,4 @@
-import type { VaultItemNote } from "@/types/entity";
+import type { VaultItem } from "@/types/entity";
 import { Button } from "@/components/ui/button";
 import { BodyText } from "@/components/typography";
 import {
@@ -10,54 +10,28 @@ import {
 import {
   ArchiveIcon,
   EllipsisIcon,
+  ListFilterIcon,
   PencilIcon,
   StarIcon,
   Trash2Icon,
 } from "lucide-react";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
-import { useState, type ComponentType } from "react";
-import { NoteIcon } from "@phosphor-icons/react";
+import { useEffect, useState, type ComponentType, type FormEvent } from "react";
+import { NoteIcon, XIcon } from "@phosphor-icons/react";
 import { EditNote } from "./edit-note";
 import { DetailNote } from "./detail-note";
-
-const dummyNoteList: VaultItemNote[] = [
-  {
-    id: "1",
-    title: "My Dairy 1",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    title: "My Dairy 2",
-    description: "hi",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "3",
-    title: "My Dairy 3",
-    description: "hi",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "4",
-    title: "My Dairy 4",
-    description: "hi",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: "5",
-    title: "My Dairy 5",
-    description: "hi",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-];
+import { useVaultDelete } from "../api/delete-item";
+import { toast } from "sonner";
+import { useGetItemsQuery } from "../api/get-items";
+import {
+  filterMenu,
+  getSortQuery,
+  type SortValue,
+  type VaultApiParams,
+} from "@/types/params";
+import { VaultFilter } from "@/components/ui/popover/vault-filter";
+import { Input } from "@/components/ui/input";
+import { queryClient } from "@/lib/react-query";
 
 type MenuItem = {
   key: "edit" | "favorite" | "archive" | "delete";
@@ -73,121 +47,226 @@ const menuItems: MenuItem[] = [
   { key: "delete", label: "Hapus", icon: Trash2Icon, destructive: true },
 ];
 
+const LIMIT_PAGE = 10;
+const DEFAULT_SORT_VALUE: SortValue = filterMenu[0].value;
+const DEFAULT_SORT_BY = "created_at,desc";
+
 export const NotesList = () => {
-  const [page, setPage] = useState(1);
-  const [items, setItems] = useState(dummyNoteList);
-  const [editingItem, setEditingItem] = useState<VaultItemNote | null>(null);
-  const [detailItem, setDetailItem] = useState<VaultItemNote | null>(null);
+  const [editingItem, setEditingItem] = useState<VaultItem | null>(null);
+  const [detailItem, setDetailItem] = useState<VaultItem | null>(null);
+  const [search, setSearch] = useState<string>("");
+  const [sortValue, setSortValue] = useState<SortValue>(DEFAULT_SORT_VALUE);
+
+  const useVaultDeleteMutation = useVaultDelete();
+
+  const [params, setParams] = useState<VaultApiParams>({
+    page: 1,
+    limit: LIMIT_PAGE,
+    sortBy: DEFAULT_SORT_BY,
+    type: "note",
+  });
+
+  const items = useGetItemsQuery(params);
+
+  const handleSortChange = (value: SortValue) => {
+    setSortValue(value);
+
+    const query = getSortQuery(value);
+
+    setParams((current) => ({
+      ...current,
+      page: 1,
+      sortBy: `${query.field},${query.order}`,
+    }));
+  };
+
+  const handleResetFilter = () => {
+    setSearch("");
+    setSortValue(DEFAULT_SORT_VALUE);
+
+    setParams((current) => {
+      const nextParams = {
+        ...current,
+        page: 1,
+        sortBy: DEFAULT_SORT_BY,
+      };
+
+      delete nextParams.search;
+
+      return nextParams;
+    });
+  };
+
+  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    setParams((v) => {
+      return {
+        ...v,
+        search: search,
+      };
+    });
+  };
+
+  useEffect(() => {
+    if (useVaultDeleteMutation.isSuccess) {
+      toast.success("Berhasil hapus item");
+      return;
+    }
+  }, [useVaultDeleteMutation.isSuccess]);
 
   const actionMap = {
-    edit: (v: VaultItemNote) => {
+    edit: (v: VaultItem) => {
       setEditingItem(v);
     },
-    favorite: (v: VaultItemNote) => {
+    favorite: (v: VaultItem) => {
       void v;
     },
-    archive: (v: VaultItemNote) => {
+    archive: (v: VaultItem) => {
       void v;
     },
-    delete: (v: VaultItemNote) => {
-      void v;
+    delete: (v: VaultItem) => {
+      useVaultDeleteMutation.mutateAsync(v.id, {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
+        },
+      });
     },
   } as const;
 
+  if (items.isPending) {
+    return <p>Loading...</p>;
+  }
+
   return (
-    <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden">
-      <EditNote
-        open={Boolean(editingItem)}
-        item={editingItem}
-        onOpenChange={(state) => {
-          if (!state) setEditingItem(null);
-        }}
-        onSubmit={(updatedItem) => {
-          setItems((currentItems) =>
-            currentItems.map((item) =>
-              item.id === updatedItem.id ? updatedItem : item,
-            ),
-          );
-        }}
-      />
-
-      <DetailNote
-        open={Boolean(detailItem)}
-        item={detailItem}
-        onOpenChange={(state) => {
-          if (!state) setDetailItem(null);
-        }}
-      />
-
-      <ul className="flex min-w-0 flex-col gap-4">
-        {items.map((item) => (
-          <li
-            key={item.id}
-            className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
-          >
-            <div
-              onClick={() => {
-                setDetailItem(item);
-              }}
-              className="cursor-pointer flex min-w-0 flex-1 items-center gap-4"
+    <>
+      <div className="flex flex-col gap-3">
+        <div className="flex min-w-0 items-center gap-4">
+          <VaultFilter value={sortValue} onValueChange={handleSortChange}>
+            <ListFilterIcon className="size-5 shrink-0 cursor-pointer" />
+          </VaultFilter>
+          <form onSubmit={handleSearch} className="flex min-w-0 flex-1 gap-4">
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="cari catatan ..."
+              className="py-4.5 rounded-md"
+            />
+            <Button
+              type="submit"
+              className="py-4 px-6 rounded-md cursor-pointer"
             >
-              {item.iconURL ? (
-                <img
-                  src={item.iconURL}
-                  alt={item.title}
-                  className="size-5 shrink-0 rounded-xs object-cover"
-                />
-              ) : (
-                <NoteIcon className="size-5 shrink-0" />
-              )}
+              Cari
+            </Button>
+          </form>
+        </div>
 
-              <BodyText className="min-w-0 flex-1 truncate">
-                {item.title}
-              </BodyText>
-            </div>
+        {search.trim().length > 0 && (
+          <button
+            type="button"
+            onClick={handleResetFilter}
+            className="inline-flex w-fit items-center gap-2 rounded-full border border-forest px-3 py-1.5 text-sm text-white transition-colors hover:border-neon-green"
+          >
+            hapus filter
+            <XIcon className="size-4 shrink-0" />
+          </button>
+        )}
+      </div>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  className="cursor-pointer rounded-md"
-                  aria-label={`Buka menu untuk ${item.title}`}
-                >
-                  <EllipsisIcon className="size-5" />
-                </Button>
-              </DropdownMenuTrigger>
+      <div className="mt-15 flex min-w-0 flex-col gap-6 overflow-x-hidden">
+        <EditNote
+          open={Boolean(editingItem)}
+          vaultItem={editingItem}
+          onOpenChange={(state) => {
+            if (!state) setEditingItem(null);
+          }}
+        />
 
-              <DropdownMenuContent align="end" className="w-44 rounded-md">
-                {menuItems.map((menuItem) => {
-                  const Icon = menuItem.icon;
+        <DetailNote
+          open={Boolean(detailItem)}
+          vaultItem={detailItem}
+          onOpenChange={(state) => {
+            if (!state) setDetailItem(null);
+          }}
+        />
 
-                  return (
-                    <DropdownMenuItem
-                      key={menuItem.key}
-                      variant={menuItem.destructive ? "destructive" : "default"}
-                      className="cursor-pointer gap-3 px-3 py-2 text-sm"
-                      onClick={() => actionMap[menuItem.key]?.(item)}
-                    >
-                      <Icon className="size-4" />
-                      <span>{menuItem.label}</span>
-                    </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </li>
-        ))}
-      </ul>
+        <ul className="flex min-w-0 flex-col gap-4">
+          {items.data?.data?.map((item) => (
+            <li
+              key={item.id}
+              className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
+            >
+              <div
+                onClick={() => {
+                  setDetailItem(item);
+                }}
+                className="cursor-pointer flex min-w-0 flex-1 items-center gap-4"
+              >
+                {item.iconURL ? (
+                  <img
+                    src={item.iconURL}
+                    alt={item.title}
+                    className="size-5 shrink-0 rounded-xs object-cover"
+                  />
+                ) : (
+                  <NoteIcon className="size-5 shrink-0" />
+                )}
 
-      <AppPagination
-        page={page}
-        onPageChange={(p) => {
-          setPage(p);
-        }}
-        totalPages={10}
-      />
-    </div>
+                <BodyText className="min-w-0 flex-1 truncate">
+                  {item.title}
+                </BodyText>
+              </div>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    className="cursor-pointer rounded-md"
+                    aria-label={`Buka menu untuk ${item.title}`}
+                  >
+                    <EllipsisIcon className="size-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent align="end" className="w-44 rounded-md">
+                  {menuItems.map((menuItem) => {
+                    const Icon = menuItem.icon;
+
+                    return (
+                      <DropdownMenuItem
+                        key={menuItem.key}
+                        variant={
+                          menuItem.destructive ? "destructive" : "default"
+                        }
+                        className="cursor-pointer gap-3 px-3 py-2 text-sm"
+                        onClick={() => actionMap[menuItem.key]?.(item)}
+                      >
+                        <Icon className="size-4" />
+                        <span>{menuItem.label}</span>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </li>
+          ))}
+        </ul>
+
+        <AppPagination
+          page={params.page}
+          onPageChange={(p) => {
+            setParams((v) => {
+              return {
+                ...v,
+                page: p,
+              };
+            });
+          }}
+          totalPages={items.data?.meta.totalPages || 0}
+        />
+      </div>
+    </>
   );
 };

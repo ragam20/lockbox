@@ -36,7 +36,7 @@ export type ArgonConfig = Entity<{
 }>;
 
 export type VaultItemPassword = Entity<{
-  iconURL: string;
+  iconURL?: string;
   title: string;
   url?: string;
   password?: string;
@@ -52,5 +52,19 @@ export type VaultItemNote = Entity<{
   createdAt?: ISOStringFormat | string;
   updatedAt?: ISOStringFormat | string;
 }>;
+
+export type VaultItem = {
+  id: string;
+  iconURL?: string;
+  title: string;
+  itemType: string;
+  ivCiphertext: string;
+  ciphertext: string;
+  ivProtectionKey: string;
+  protectionKey: string;
+
+  createdAt?: ISOStringFormat | string;
+  updatedAt?: ISOStringFormat | string;
+};
 
 export const VAULT_ITEM_TYPE = ["note", "password"] as const;
