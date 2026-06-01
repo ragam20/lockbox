@@ -34,17 +34,17 @@ export const getArgonConfig = async () => {
     "/vault/argon-config",
   );
 
-  return resp.data;
+  return resp.data.data;
 };
 
 export const getVault = async () => {
   const resp = await privateApi.get<unknown, ApiResponse<Vault>>("/vault");
-  return resp.data;
+  return resp.data.data;
 };
 
 export const getUser = async () => {
   const resp = await privateApi.get<unknown, ApiResponse<User>>("/user");
-  return resp.data;
+  return resp.data.data;
 };
 
 export const useGetUserQuery = () => {

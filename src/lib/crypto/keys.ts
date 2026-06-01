@@ -142,7 +142,7 @@ export async function unwrapDataEncryptionKey(
       length: 256,
     },
     true,
-    ["wrapKey", "unwrapKey"],
+    ["encrypt", "decrypt"],
   );
 }
 
@@ -221,7 +221,11 @@ export function base64ToUint8Array(base64: string): Uint8Array {
 }
 
 export function base64ToArrayBuffer(base64: string): ArrayBuffer {
-  return base64ToUint8Array(base64).buffer;
+  const bytes = base64ToUint8Array(base64);
+  return bytes.buffer.slice(
+    bytes.byteOffset,
+    bytes.byteOffset + bytes.byteLength,
+  ) as ArrayBuffer;
 }
 
 // ubah object -> string -> byte

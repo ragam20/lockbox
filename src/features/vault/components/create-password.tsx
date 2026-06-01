@@ -9,6 +9,7 @@ import {
 import { Form, FormField, PasswordFormField } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
+import { queryClient } from "@/lib/react-query";
 import z from "zod";
 import { useCreatePassword } from "../api/create-password";
 import { toast } from "sonner";
@@ -92,13 +93,14 @@ export const CreatePassword = ({ open, onOpenChange }: CreateLoginProps) => {
       {
         title: data.title,
         itemType: "password",
-        ciphertext: arrayBufferToBase64(ciphertext.ciphertext),
         ivCipherText: arrayBufferToBase64(ciphertext.iv),
+        ciphertext: arrayBufferToBase64(ciphertext.ciphertext),
         ivProtectionKey: uint8ToBase64(encryptedDEK.iv),
         protectionKey: arrayBufferToBase64(encryptedDEK.wrappedKey),
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
           onOpenChange(false);
         },
       },

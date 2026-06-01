@@ -1,19 +1,11 @@
-import type { VaultItemPassword, VaultItemNote } from "@/types/entity";
+import type { VaultItem } from "@/types/entity";
 import { DetailPassword } from "./detail-password";
 import { DetailNote } from "./detail-note";
-
-export type VaultDetailItemByType = {
-  web: VaultItemPassword & { type: "web" };
-  note: VaultItemNote & { type: "note" };
-};
-
-export type VaultDetailItem =
-  VaultDetailItemByType[keyof VaultDetailItemByType];
 
 type VaultItemDetailProps = {
   open: boolean;
   onOpenChange: (state: boolean) => void;
-  item: VaultDetailItem | null;
+  item: VaultItem | null;
 };
 
 export const VaultItemDetail = ({
@@ -23,11 +15,17 @@ export const VaultItemDetail = ({
 }: VaultItemDetailProps) => {
   if (!item) return null;
 
-  if (item.type === "web") {
+  if (item.itemType === "password") {
     return (
-      <DetailPassword open={open} onOpenChange={onOpenChange} item={item} />
+      <DetailPassword
+        open={open}
+        onOpenChange={onOpenChange}
+        vaultItem={item}
+      />
     );
   }
 
-  return <DetailNote open={open} onOpenChange={onOpenChange} item={item} />;
+  return (
+    <DetailNote open={open} onOpenChange={onOpenChange} vaultItem={item} />
+  );
 };

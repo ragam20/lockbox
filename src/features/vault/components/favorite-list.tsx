@@ -161,7 +161,7 @@ export const FavoriteList = () => {
     <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden">
       <EditPassword
         open={Boolean(editingWebItem)}
-        item={editingWebItem}
+        vaultItem={editingWebItem}
         onOpenChange={(state) => {
           if (!state) setEditingWebItem(null);
         }}

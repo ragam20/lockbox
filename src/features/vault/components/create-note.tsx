@@ -23,6 +23,7 @@ import {
   wrapDataEncryptionKey,
 } from "@/lib/crypto/keys";
 import { useEffect } from "react";
+import { queryClient } from "@/lib/react-query";
 import { toast } from "sonner";
 
 const createNoteSchema = z.object({
@@ -86,7 +87,8 @@ export const CreateNote = ({ open, onOpenChange }: CreateNoteProps) => {
         protectionKey: arrayBufferToBase64(encryptedDEK.wrappedKey),
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
           onOpenChange(false);
         },
       },
