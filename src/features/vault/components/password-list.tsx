@@ -10,7 +10,6 @@ import {
 import { BodyText } from "@/components/typography";
 import {
   ArchiveIcon,
-  CopyIcon,
   EllipsisIcon,
   GlobeLockIcon,
   ListFilterIcon,
@@ -23,20 +22,25 @@ import { AppPagination } from "@/components/ui/pagination/app-pagination";
 import { EditPassword } from "./edit-password";
 import { DetailPassword } from "./detail-password";
 import { useVaultDelete } from "../api/delete-item";
-import { filterMenu, getSortQuery, type SortValue, type VaultApiParams } from "@/types/params";
+import {
+  filterMenu,
+  getSortQuery,
+  type SortValue,
+  type VaultApiParams,
+} from "@/types/params";
 import { useGetItemsQuery } from "../api/get-items";
 import { VaultFilter } from "@/components/ui/popover/vault-filter";
 import { Input } from "@/components/ui/input";
+import { queryClient } from "@/lib/react-query";
 
 type MenuItem = {
-  key: "copy" | "edit" | "favorite" | "archive" | "delete";
+  key: "edit" | "favorite" | "archive" | "delete";
   label: string;
   icon: ComponentType<{ className?: string }>;
   destructive?: boolean;
 };
 
 const menuItems: MenuItem[] = [
-  { key: "copy", label: "Salin sandi", icon: CopyIcon },
   { key: "edit", label: "Ubah", icon: PencilIcon },
   { key: "favorite", label: "Favorit", icon: StarIcon },
   { key: "archive", label: "Arsip", icon: ArchiveIcon },
@@ -45,7 +49,7 @@ const menuItems: MenuItem[] = [
 
 const LIMIT_PAGE = 10;
 const DEFAULT_SORT_VALUE: SortValue = filterMenu[0].value;
-const DEFAULT_SORT_BY = "created_at";
+const DEFAULT_SORT_BY = "created_at,desc";
 
 export const PasswordList = () => {
   const [editingItem, setEditingItem] = useState<VaultItem | null>(null);
@@ -56,7 +60,7 @@ export const PasswordList = () => {
   const [params, setParams] = useState<VaultApiParams>({
     page: 1,
     limit: LIMIT_PAGE,
-    sortBy: "created_at",
+    sortBy: DEFAULT_SORT_BY,
     type: "password",
   });
 
@@ -93,14 +97,6 @@ export const PasswordList = () => {
     });
   };
 
-  const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -113,9 +109,6 @@ export const PasswordList = () => {
   };
 
   const actionMap = {
-    copy: (v: VaultItem) => {
-      handleCopy(v.title);
-    },
     edit: (v: VaultItem) => {
       setEditingItem(v);
     },
@@ -126,7 +119,11 @@ export const PasswordList = () => {
       void v;
     },
     delete: (v: VaultItem) => {
-      useVaultDeleteMutation.mutateAsync(v.id);
+      useVaultDeleteMutation.mutateAsync(v.id, {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
+        },
+      });
     },
   } as const;
 
@@ -144,7 +141,10 @@ export const PasswordList = () => {
               placeholder="cari login ..."
               className="py-4.5 rounded-md"
             />
-            <Button type="submit" className="py-4 px-6 rounded-md cursor-pointer">
+            <Button
+              type="submit"
+              className="py-4 px-6 rounded-md cursor-pointer"
+            >
               Cari
             </Button>
           </form>
@@ -179,14 +179,16 @@ export const PasswordList = () => {
           }}
         />
 
-        <ul key={"password-list"} className="flex min-w-0 flex-col gap-4">
-          {items.data?.map((item) => (
+        <ul className="flex min-w-0 flex-col gap-4">
+          {items.data?.data?.map((item) => (
             <li
-              onClick={() => setDetailItem(item)}
               key={item.id}
-              className="cursor-pointer flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
+              className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
             >
-              <div className="flex h-fit min-w-0 flex-1 items-center gap-4">
+              <div
+                onClick={() => setDetailItem(item)}
+                className="cursor-pointer flex h-fit min-w-0 flex-1 items-center gap-4"
+              >
                 {item.iconURL ? (
                   <img
                     src={item.iconURL}
@@ -249,7 +251,7 @@ export const PasswordList = () => {
               };
             });
           }}
-          totalPages={LIMIT_PAGE}
+          totalPages={items.data?.meta?.totalPages || 0}
         />
       </div>
     </>

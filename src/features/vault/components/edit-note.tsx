@@ -26,6 +26,7 @@ import type { VaultItem, VaultItemNote } from "@/types/entity";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useUpdateVault } from "../api/update-item";
+import { queryClient } from "@/lib/react-query";
 
 const editNoteSchema = z.object({
   title: z.string(),
@@ -69,7 +70,7 @@ export const EditNote = ({ open, vaultItem, onOpenChange }: EditNoteProps) => {
 
         const unwrappedData = await decryptData(
           unwrappedDEK,
-          base64ToArrayBuffer(vaultItem.ivCipherText),
+          base64ToArrayBuffer(vaultItem.ivCiphertext),
           base64ToArrayBuffer(vaultItem.ciphertext),
         );
 
@@ -136,7 +137,8 @@ export const EditNote = ({ open, vaultItem, onOpenChange }: EditNoteProps) => {
         protectionKey: arrayBufferToBase64(encryptedDEK.wrappedKey),
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
           onOpenChange(false);
         },
       },

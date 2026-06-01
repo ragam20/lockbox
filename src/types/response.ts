@@ -30,6 +30,14 @@ export type ApiResponse<T> = {
   data: T;
 };
 
+export type PaginationResponse<T> = {
+  success: boolean;
+  message: string;
+  timestamp: ISOStringFormat;
+  data: T;
+  meta: PaginationMeta;
+};
+
 export type GetRegisterSessionReponse = {
   email: string;
 };
@@ -45,4 +53,11 @@ export type RequestOtpResponse = {
 export type VerifyOtpResponse = {
   email: string;
   isVerified: boolean;
+};
+
+export type PaginationMeta = {
+  page: number;
+  limit: number;
+  totalItems: number;
+  totalPages: number;
 };

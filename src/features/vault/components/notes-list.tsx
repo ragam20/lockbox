@@ -23,9 +23,15 @@ import { DetailNote } from "./detail-note";
 import { useVaultDelete } from "../api/delete-item";
 import { toast } from "sonner";
 import { useGetItemsQuery } from "../api/get-items";
-import { filterMenu, getSortQuery, type SortValue, type VaultApiParams } from "@/types/params";
+import {
+  filterMenu,
+  getSortQuery,
+  type SortValue,
+  type VaultApiParams,
+} from "@/types/params";
 import { VaultFilter } from "@/components/ui/popover/vault-filter";
 import { Input } from "@/components/ui/input";
+import { queryClient } from "@/lib/react-query";
 
 type MenuItem = {
   key: "edit" | "favorite" | "archive" | "delete";
@@ -43,7 +49,7 @@ const menuItems: MenuItem[] = [
 
 const LIMIT_PAGE = 10;
 const DEFAULT_SORT_VALUE: SortValue = filterMenu[0].value;
-const DEFAULT_SORT_BY = "created_at";
+const DEFAULT_SORT_BY = "created_at,desc";
 
 export const NotesList = () => {
   const [editingItem, setEditingItem] = useState<VaultItem | null>(null);
@@ -56,7 +62,7 @@ export const NotesList = () => {
   const [params, setParams] = useState<VaultApiParams>({
     page: 1,
     limit: LIMIT_PAGE,
-    sortBy: "created_at",
+    sortBy: DEFAULT_SORT_BY,
     type: "note",
   });
 
@@ -120,7 +126,11 @@ export const NotesList = () => {
       void v;
     },
     delete: (v: VaultItem) => {
-      useVaultDeleteMutation.mutateAsync(v.id);
+      useVaultDeleteMutation.mutateAsync(v.id, {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
+        },
+      });
     },
   } as const;
 
@@ -142,7 +152,10 @@ export const NotesList = () => {
               placeholder="cari catatan ..."
               className="py-4.5 rounded-md"
             />
-            <Button type="submit" className="py-4 px-6 rounded-md cursor-pointer">
+            <Button
+              type="submit"
+              className="py-4 px-6 rounded-md cursor-pointer"
+            >
               Cari
             </Button>
           </form>
@@ -178,7 +191,7 @@ export const NotesList = () => {
         />
 
         <ul className="flex min-w-0 flex-col gap-4">
-          {items.data?.map((item) => (
+          {items.data?.data?.map((item) => (
             <li
               key={item.id}
               className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
@@ -251,7 +264,7 @@ export const NotesList = () => {
               };
             });
           }}
-          totalPages={LIMIT_PAGE}
+          totalPages={items.data?.meta.totalPages || 0}
         />
       </div>
     </>

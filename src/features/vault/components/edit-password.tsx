@@ -26,6 +26,7 @@ import {
   unwrapDataEncryptionKey,
   wrapDataEncryptionKey,
 } from "@/lib/crypto/keys";
+import { queryClient } from "@/lib/react-query";
 
 const editPasswordSchema = z.object({
   title: z.string(),
@@ -88,7 +89,7 @@ export const EditPassword = ({
 
         const unwrappedData = await decryptData(
           unwrappedDEK,
-          base64ToArrayBuffer(vaultItem.ivCipherText),
+          base64ToArrayBuffer(vaultItem.ivCiphertext),
           base64ToArrayBuffer(vaultItem.ciphertext),
         );
 
@@ -160,7 +161,8 @@ export const EditPassword = ({
         protectionKey: arrayBufferToBase64(encryptedDEK.wrappedKey),
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
           onOpenChange(false);
         },
       },
