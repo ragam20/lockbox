@@ -32,6 +32,8 @@ import { useGetItemsQuery } from "../api/get-items";
 import { VaultFilter } from "@/components/ui/popover/vault-filter";
 import { Input } from "@/components/ui/input";
 import { queryClient } from "@/lib/react-query";
+import { useArchive } from "../api/archive";
+import { toast } from "sonner";
 
 type MenuItem = {
   key: "edit" | "favorite" | "archive" | "delete";
@@ -65,6 +67,7 @@ export const PasswordList = () => {
   });
 
   const useVaultDeleteMutation = useVaultDelete();
+  const useArchiveMutation = useArchive();
 
   const items = useGetItemsQuery(params);
 
@@ -116,12 +119,18 @@ export const PasswordList = () => {
       void v;
     },
     archive: (v: VaultItem) => {
-      void v;
+      useArchiveMutation.mutateAsync(v.id, {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
+          toast.success(`${v.title} | Arsipkan`);
+        },
+      });
     },
     delete: (v: VaultItem) => {
       useVaultDeleteMutation.mutateAsync(v.id, {
         onSuccess: async () => {
           await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
+          toast.success(`${v.title} | Berhasil dihapus`);
         },
       });
     },

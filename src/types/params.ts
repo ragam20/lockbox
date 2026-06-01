@@ -1,10 +1,10 @@
-export type VaultType = "note" | "password";
+export type VaultType = "note" | "password" | "all";
 
 export type VaultApiParams = {
   page: number;
   limit: number;
   sortBy: string;
-  type: VaultType;
+  type?: VaultType;
   archive?: boolean;
   search?: string;
 };

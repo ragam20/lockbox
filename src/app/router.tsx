@@ -10,7 +10,7 @@ import { VaultRoute } from "./routes/app/vaults/vault";
 import { ToolRoute } from "./routes/app/tools/tool";
 import { AppRoot, AuthRoot } from "./root";
 import { AccountSettingRoute } from "./routes/app/user/account-setting";
-import { ArchiveRoute } from "./routes/app/archive/page";
+import { ArchiveRoute } from "./routes/app/archive/archive-route";
 import { PricingRoute } from "./routes/app/pricing/page";
 import { CompleteRegisterRoute } from "./routes/auth/complete-register";
 import { VerifyEmailRoute } from "./routes/auth/verify-email";

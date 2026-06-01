@@ -16,7 +16,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { AppPagination } from "@/components/ui/pagination/app-pagination";
-import { useEffect, useState, type ComponentType, type FormEvent } from "react";
+import { useState, type ComponentType, type FormEvent } from "react";
 import { NoteIcon, XIcon } from "@phosphor-icons/react";
 import { EditNote } from "./edit-note";
 import { DetailNote } from "./detail-note";
@@ -32,6 +32,7 @@ import {
 import { VaultFilter } from "@/components/ui/popover/vault-filter";
 import { Input } from "@/components/ui/input";
 import { queryClient } from "@/lib/react-query";
+import { useArchive } from "../api/archive";
 
 type MenuItem = {
   key: "edit" | "favorite" | "archive" | "delete";
@@ -58,6 +59,7 @@ export const NotesList = () => {
   const [sortValue, setSortValue] = useState<SortValue>(DEFAULT_SORT_VALUE);
 
   const useVaultDeleteMutation = useVaultDelete();
+  const useArchiveMutation = useArchive();
 
   const [params, setParams] = useState<VaultApiParams>({
     page: 1,
@@ -108,13 +110,6 @@ export const NotesList = () => {
     });
   };
 
-  useEffect(() => {
-    if (useVaultDeleteMutation.isSuccess) {
-      toast.success("Berhasil hapus item");
-      return;
-    }
-  }, [useVaultDeleteMutation.isSuccess]);
-
   const actionMap = {
     edit: (v: VaultItem) => {
       setEditingItem(v);
@@ -123,12 +118,18 @@ export const NotesList = () => {
       void v;
     },
     archive: (v: VaultItem) => {
-      void v;
+      useArchiveMutation.mutateAsync(v.id, {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
+          toast.success(`${v.title} | Arsipkan`);
+        },
+      });
     },
     delete: (v: VaultItem) => {
       useVaultDeleteMutation.mutateAsync(v.id, {
         onSuccess: async () => {
           await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
+          toast.success(`${v.title} | Berhasil dihapus`);
         },
       });
     },
