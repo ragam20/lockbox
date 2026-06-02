@@ -33,6 +33,7 @@ import { VaultFilter } from "@/components/ui/popover/vault-filter";
 import { Input } from "@/components/ui/input";
 import { queryClient } from "@/lib/react-query";
 import { useArchive } from "../api/archive";
+import { useSetFavorite } from "../api/set-favorite";
 import { toast } from "sonner";
 
 type MenuItem = {
@@ -68,6 +69,7 @@ export const PasswordList = () => {
 
   const useVaultDeleteMutation = useVaultDelete();
   const useArchiveMutation = useArchive();
+  const useSetFavoriteMutation = useSetFavorite();
 
   const items = useGetItemsQuery(params);
 
@@ -116,7 +118,12 @@ export const PasswordList = () => {
       setEditingItem(v);
     },
     favorite: (v: VaultItem) => {
-      void v;
+      useSetFavoriteMutation.mutateAsync(v.id, {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
+          toast.success(`${v.title} | Berhasil ditambahkan ke favorite`);
+        },
+      });
     },
     archive: (v: VaultItem) => {
       useArchiveMutation.mutateAsync(v.id, {
