@@ -33,6 +33,7 @@ import { VaultFilter } from "@/components/ui/popover/vault-filter";
 import { Input } from "@/components/ui/input";
 import { queryClient } from "@/lib/react-query";
 import { useArchive } from "../api/archive";
+import { useSetFavorite } from "../api/set-favorite";
 
 type MenuItem = {
   key: "edit" | "favorite" | "archive" | "delete";
@@ -60,6 +61,7 @@ export const NotesList = () => {
 
   const useVaultDeleteMutation = useVaultDelete();
   const useArchiveMutation = useArchive();
+  const useSetFavoriteMutation = useSetFavorite();
 
   const [params, setParams] = useState<VaultApiParams>({
     page: 1,
@@ -115,7 +117,12 @@ export const NotesList = () => {
       setEditingItem(v);
     },
     favorite: (v: VaultItem) => {
-      void v;
+      useSetFavoriteMutation.mutateAsync(v.id, {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
+          toast.success(`${v.title} | Berhasil ditambahkan ke favorite`);
+        },
+      });
     },
     archive: (v: VaultItem) => {
       useArchiveMutation.mutateAsync(v.id, {

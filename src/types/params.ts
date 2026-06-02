@@ -7,6 +7,7 @@ export type VaultApiParams = {
   type?: VaultType;
   archive?: boolean;
   search?: string;
+  favorite?: boolean;
 };
 
 export const sortMap = {
