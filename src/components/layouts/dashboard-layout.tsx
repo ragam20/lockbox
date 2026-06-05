@@ -20,12 +20,15 @@ import {
   ArchiveIcon,
 } from "lucide-react";
 import { useSidebar } from "../ui/sidebar-context";
-import { BodyText, Heading3 } from "../typography";
+import { BodyText } from "../typography";
 import { NavLink, useNavigate } from "react-router";
 import { UserAvatar } from "../ui/avatar/user-avatar";
 import { AvatarDropdown } from "../ui/popover/avatar-dropdown";
 import { useGetUserQuery, useLogout } from "@/lib/auth";
 import { useAppStore } from "@/lib/store";
+import { AppTitle } from "../ui/text/title";
+import { useEffect, useState } from "react";
+import { LoadingScreen } from "../effects/loading-screen";
 
 type DashboardMenu = {
   title: string;
@@ -56,6 +59,20 @@ type DashboardLayoutProps = {
 };
 
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const [showLoading, setShowLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (showLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <SidebarProvider className="relative max-w-full overflow-x-clip">
       <AppSidebar />
@@ -78,9 +95,7 @@ export const AppSidebar = () => {
   return (
     <Sidebar collapsible="icon" className="group">
       <SidebarHeader className="p-4">
-        <Heading3 className="group-data-[collapsible=icon]:hidden">
-          <span className="text-neon-green">Lock</span>Box
-        </Heading3>
+        <AppTitle classname="group-data-[collapsible=icon]:hidden" />
       </SidebarHeader>
       <SidebarContent className="bg-void">
         <AvatarDropdown
@@ -96,7 +111,7 @@ export const AppSidebar = () => {
           }}
         >
           <div className="flex gap-2 p-2 mb-4 cursor-pointer items-center w-full hover:bg-forest">
-            <UserAvatar user={userQuery.data} />
+            <UserAvatar user={userQuery.data!} />
 
             <BodyText className="flex-1 text-start truncate group-data-[state=collapsed] text-sm">
               {userQuery.data?.name}

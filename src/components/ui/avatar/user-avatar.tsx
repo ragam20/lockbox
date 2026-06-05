@@ -6,6 +6,7 @@ type UserAvatarProps = {
   size?: "default" | "sm" | "lg";
   className?: string;
   onClick?: () => void;
+  isLoading?: boolean;
 };
 
 export const UserAvatar = ({
@@ -13,20 +14,29 @@ export const UserAvatar = ({
   size,
   className,
   onClick,
+  isLoading,
 }: UserAvatarProps) => {
   const initials = getInitials(user.name);
   const bgColor = stringToColors(user.name || "user");
 
   return (
     <Avatar className={className} size={size} onClick={onClick}>
-      <AvatarImage src={user.imgURL ? user.imgURL : ""} alt="user avatar" />
+      {isLoading ? (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-neon-green" />
+        </div>
+      ) : (
+        <>
+          <AvatarImage src={user.imgURL ? user.imgURL : ""} alt="user avatar" />
 
-      <AvatarFallback
-        style={{ backgroundColor: bgColor }}
-        className="text-white font-medium"
-      >
-        {initials}
-      </AvatarFallback>
+          <AvatarFallback
+            style={{ backgroundColor: bgColor }}
+            className="text-white font-medium"
+          >
+            {initials}
+          </AvatarFallback>
+        </>
+      )}
     </Avatar>
   );
 };

@@ -4,6 +4,7 @@ import { Navigate } from "react-router";
 import { paths } from "@/config/paths";
 import { useGetUserQuery } from "./auth";
 import { useEffect } from "react";
+import { LoadingScreen } from "@/components/effects/loading-screen";
 
 export const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   const appStore = useAppStore();
@@ -19,7 +20,7 @@ export const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   }, [appStore.auth, userQuery.data, userQuery.isSuccess]);
 
   if (userQuery.isPending) {
-    return <p>Loading ...</p>;
+    return <LoadingScreen />;
   }
 
   if (userQuery.isSuccess) {

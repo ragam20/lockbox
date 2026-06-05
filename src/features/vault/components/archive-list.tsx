@@ -33,6 +33,8 @@ import { useUnArchive } from "../api/unarchive";
 import { useVaultDelete } from "../api/delete-item";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "sonner";
+import { EmptyState } from "@/components/ui/chip/empty-state";
+import { LoadingScreen } from "@/components/effects/loading-screen";
 
 type ArchiveAction = "restore" | "delete";
 
@@ -143,6 +145,8 @@ export const ArchiveList = () => {
     });
   };
 
+  const isLoadingList = items.isPending || items.isFetching;
+
   return (
     <div className="m-8">
       <div className="flex flex-col gap-3">
@@ -187,73 +191,84 @@ export const ArchiveList = () => {
           }}
         />
 
-        <ul className="flex min-w-0 flex-col gap-4">
-          {items.data?.data?.map((item) => {
-            const config = archiveTypeConfig[item.itemType];
-            const Icon = config.fallbackIcon;
+        {items.isError ? (
+          <EmptyState />
+        ) : isLoadingList ? (
+          <LoadingScreen className="min-h-56" />
+        ) : items.data?.data.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <ul className="flex min-w-0 flex-col gap-4">
+            {items.data?.data?.map((item) => {
+              const config = archiveTypeConfig[item.itemType];
+              const Icon = config.fallbackIcon;
 
-            return (
-              <li
-                key={`${item.itemType}-${item.id}`}
-                className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
-              >
-                <button
-                  type="button"
-                  onClick={() => setDetailItem(item)}
-                  className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 bg-transparent p-0 text-left text-inherit"
+              return (
+                <li
+                  key={`${item.itemType}-${item.id}`}
+                  className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
                 >
-                  {"iconURL" in item && item.iconURL ? (
-                    <img
-                      src={item.iconURL}
-                      alt={item.title}
-                      className="size-5 shrink-0 rounded-xs object-cover"
-                    />
-                  ) : (
-                    <Icon className="size-5 shrink-0" />
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setDetailItem(item)}
+                    className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 bg-transparent p-0 text-left text-inherit"
+                  >
+                    {"iconURL" in item && item.iconURL ? (
+                      <img
+                        src={item.iconURL}
+                        alt={item.title}
+                        className="size-5 shrink-0 rounded-xs object-cover"
+                      />
+                    ) : (
+                      <Icon className="size-5 shrink-0" />
+                    )}
 
-                  <BodyText className="min-w-0 flex-1 truncate">
-                    {item.title}
-                  </BodyText>
-                </button>
+                    <BodyText className="min-w-0 flex-1 truncate">
+                      {item.title}
+                    </BodyText>
+                  </button>
 
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      className="cursor-pointer rounded-md"
-                      aria-label={`Buka menu untuk ${item.title}`}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        className="cursor-pointer rounded-md"
+                        aria-label={`Buka menu untuk ${item.title}`}
+                      >
+                        <EllipsisIcon className="size-5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent
+                      align="end"
+                      className="w-44 rounded-md"
                     >
-                      <EllipsisIcon className="size-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
+                      {archiveMenuItems.map((menuItem) => {
+                        const MenuIcon = menuItem.icon;
 
-                  <DropdownMenuContent align="end" className="w-44 rounded-md">
-                    {archiveMenuItems.map((menuItem) => {
-                      const MenuIcon = menuItem.icon;
-
-                      return (
-                        <DropdownMenuItem
-                          key={menuItem.key}
-                          variant={
-                            menuItem.destructive ? "destructive" : "default"
-                          }
-                          className="cursor-pointer gap-3 px-3 py-2 text-sm"
-                          onClick={() => actionMap[menuItem.key](item)}
-                        >
-                          <MenuIcon className="size-4" />
-                          <span>{menuItem.label}</span>
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </li>
-            );
-          })}
-        </ul>
+                        return (
+                          <DropdownMenuItem
+                            key={menuItem.key}
+                            variant={
+                              menuItem.destructive ? "destructive" : "default"
+                            }
+                            className="cursor-pointer gap-3 px-3 py-2 text-sm"
+                            onClick={() => actionMap[menuItem.key](item)}
+                          >
+                            <MenuIcon className="size-4" />
+                            <span>{menuItem.label}</span>
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </li>
+              );
+            })}
+          </ul>
+        )}
 
         <AppPagination
           page={page}

@@ -32,6 +32,7 @@ import {
 import { Navigate, useNavigate } from "react-router";
 import { paths } from "@/config/paths";
 import { cn } from "@/lib/utils";
+import { LoadingScreen } from "@/components/effects/loading-screen";
 
 const loginSchema = z.object({
   password: z.string().min(1, "password tidak boleh kosong"),
@@ -116,7 +117,7 @@ export const UnlockForm = () => {
     argonConfigQuery.isPending || userQuery.isPending || vaultQuery.isPending;
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <LoadingScreen />;
   }
 
   if (userQuery.isError) {

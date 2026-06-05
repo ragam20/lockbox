@@ -4,7 +4,7 @@ import {
   Heading3,
   Heading5,
 } from "@/components/typography";
-import { Button } from "@/components/ui/button";
+import { Button, SubmitButton } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -111,14 +111,14 @@ export const EmailCard = ({ onSubmit, loading }: EmailCardProps) => {
             </>
           )}
         </Form>
-        <Button
+        <SubmitButton
           loading={loading}
           form="register-form"
           type="submit"
           className="w-full rounded-md cursor-pointer"
         >
           Lanjut
-        </Button>
+        </SubmitButton>
       </CardContent>
     </Card>
   );

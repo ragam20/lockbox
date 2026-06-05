@@ -51,15 +51,16 @@ export const SetAvatar = ({ user, onChange }: SetAvatarProps) => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const profileUser = {
-    ...user,
-    imgURL: avatarPreview ?? user.imgURL,
-  };
-
   const saveAvatarMutation = useSaveAvatarRequest();
   const removeAvatarMutation = useRemoveAvatar();
   const uploadAvatarPermissionMutation = useUploadAvatarPermission();
   const uploadAvatarMutation = useUploadAvatar();
+
+  const isLoading =
+    saveAvatarMutation.isPending ||
+    removeAvatarMutation.isPending ||
+    uploadAvatarPermissionMutation.isPending ||
+    uploadAvatarMutation.isPending;
 
   useEffect(() => {
     return () => {
@@ -123,16 +124,16 @@ export const SetAvatar = ({ user, onChange }: SetAvatarProps) => {
       />
 
       <UserAvatar
-        onClick={() => {
-          setAvatarView(!avatarView);
-        }}
-        user={profileUser}
+        isLoading={isLoading}
+        onClick={isLoading ? undefined : () => setAvatarView(!avatarView)}
+        user={user}
         className="cursor-pointer size-full **:data-[slot=avatar-fallback]:text-4xl"
       />
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <SubmitButton
+            disabled={isLoading}
             size="icon-sm"
             className="absolute right-2 bottom-2 rounded-full bg-void/90 text-white shadow-md hover:bg-forest"
             aria-label="Pilih foto profil"

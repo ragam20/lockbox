@@ -1,6 +1,7 @@
 import { SmokeEffect } from "@/components/effects/smoke-effect";
 import { Head } from "@/components/seo/head";
-import { BodyText, Heading5 } from "@/components/typography";
+import { BodyText } from "@/components/typography";
+import { AppTitle } from "@/components/ui/text/title";
 import { paths } from "@/config/paths";
 import { CompleteRegister } from "@/features/auth/components/complete-register";
 import { Navigate, useSearchParams } from "react-router";
@@ -20,12 +21,7 @@ export const CompleteRegisterRoute = () => {
 
       <header className="relative z-10 border-b">
         <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
-          <div className="shrink-0">
-            <Heading5 className="cursor-pointer">
-              <span className="text-neon-green">Lock</span>
-              Box
-            </Heading5>
-          </div>
+          <AppTitle />
         </nav>
       </header>
 
