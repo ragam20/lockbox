@@ -38,6 +38,8 @@ import { toast } from "sonner";
 import { useArchive } from "../api/archive";
 import { useDeleteFavorite } from "../api/delete-favorite";
 import { useGetFavorites } from "../api/get-favorites";
+import { EmptyState } from "@/components/ui/chip/empty-state";
+import { LoadingScreen } from "@/components/effects/loading-screen";
 
 type FavoriteAction = "edit" | "favorite" | "archive" | "delete";
 
@@ -103,9 +105,12 @@ export const FavoriteList = () => {
       (current) => {
         if (!current) return current;
 
-        const data = current.data.filter((favorite) => favorite.id !== favoriteId);
+        const data = current.data.filter(
+          (favorite) => favorite.id !== favoriteId,
+        );
         const totalItems = Math.max(0, current.meta.totalItems - 1);
-        const totalPages = totalItems === 0 ? 0 : Math.ceil(totalItems / current.meta.limit);
+        const totalPages =
+          totalItems === 0 ? 0 : Math.ceil(totalItems / current.meta.limit);
 
         return {
           ...current,
@@ -129,6 +134,8 @@ export const FavoriteList = () => {
       search,
     }));
   };
+
+  const isLoadingList = items.isPending || items.isFetching;
 
   const handleSortChange = (value: SortValue) => {
     setSortValue(value);
@@ -266,73 +273,86 @@ export const FavoriteList = () => {
           }}
         />
 
-        <ul className="flex min-w-0 flex-col gap-4">
-          {items.data?.data?.map((item) => {
-            const config = favoriteTypeConfig[item.itemType];
-            const Icon = config.fallbackIcon;
+        {items.isError ? (
+          <EmptyState />
+        ) : isLoadingList ? (
+          <LoadingScreen className="min-h-56" />
+        ) : items.data?.data.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <>
+            <ul className="flex min-w-0 flex-col gap-4">
+              {items.data?.data?.map((item) => {
+                const config = favoriteTypeConfig[item.itemType];
+                const Icon = config.fallbackIcon;
 
-            return (
-              <li
-                key={`${item.itemType}-${item.id}`}
-                className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
-              >
-                <button
-                  type="button"
-                  onClick={() => setDetailItem(item)}
-                  className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 bg-transparent p-0 text-left text-inherit"
-                >
-                  {"iconURL" in item && item.iconURL ? (
-                    <img
-                      src={item.iconURL}
-                      alt={item.title}
-                      className="size-5 shrink-0 rounded-xs object-cover"
-                    />
-                  ) : (
-                    <Icon className="size-5 shrink-0" />
-                  )}
-
-                  <BodyText className="min-w-0 flex-1 truncate">
-                    {item.title}
-                  </BodyText>
-                </button>
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
+                return (
+                  <li
+                    key={`${item.itemType}-${item.id}`}
+                    className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
+                  >
+                    <button
                       type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      className="cursor-pointer rounded-md"
-                      aria-label={`Buka menu untuk ${item.title}`}
+                      onClick={() => setDetailItem(item)}
+                      className="flex min-w-0 flex-1 cursor-pointer items-center gap-4 bg-transparent p-0 text-left text-inherit"
                     >
-                      <EllipsisIcon className="size-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
+                      {"iconURL" in item && item.iconURL ? (
+                        <img
+                          src={item.iconURL}
+                          alt={item.title}
+                          className="size-5 shrink-0 rounded-xs object-cover"
+                        />
+                      ) : (
+                        <Icon className="size-5 shrink-0" />
+                      )}
 
-                  <DropdownMenuContent align="end" className="w-44 rounded-md">
-                    {commonFavoriteMenuItems.map((menuItem) => {
-                      const MenuIcon = menuItem.icon;
+                      <BodyText className="min-w-0 flex-1 truncate">
+                        {item.title}
+                      </BodyText>
+                    </button>
 
-                      return (
-                        <DropdownMenuItem
-                          key={menuItem.key}
-                          variant={
-                            menuItem.destructive ? "destructive" : "default"
-                          }
-                          className="cursor-pointer gap-3 px-3 py-2 text-sm"
-                          onClick={() => actionMap[menuItem.key](item)}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon-sm"
+                          className="cursor-pointer rounded-md"
+                          aria-label={`Buka menu untuk ${item.title}`}
                         >
-                          <MenuIcon className="size-4" />
-                          <span>{menuItem.label}</span>
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </li>
-            );
-          })}
-        </ul>
+                          <EllipsisIcon className="size-5" />
+                        </Button>
+                      </DropdownMenuTrigger>
+
+                      <DropdownMenuContent
+                        align="end"
+                        className="w-44 rounded-md"
+                      >
+                        {commonFavoriteMenuItems.map((menuItem) => {
+                          const MenuIcon = menuItem.icon;
+
+                          return (
+                            <DropdownMenuItem
+                              key={menuItem.key}
+                              variant={
+                                menuItem.destructive ? "destructive" : "default"
+                              }
+                              className="cursor-pointer gap-3 px-3 py-2 text-sm"
+                              onClick={() => actionMap[menuItem.key](item)}
+                            >
+                              <MenuIcon className="size-4" />
+                              <span>{menuItem.label}</span>
+                            </DropdownMenuItem>
+                          );
+                        })}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )}
 
         <AppPagination
           page={params.page}

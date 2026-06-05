@@ -1,7 +1,8 @@
 import { Head } from "@/components/seo/head";
-import { BodyText, Heading1, Heading5 } from "@/components/typography";
+import { BodyText, Heading1 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { PasswordGeneratorBox } from "@/components/ui/password-generator-box";
+import { AppTitle } from "@/components/ui/text/title";
 import { paths } from "@/config/paths";
 import { useNavigate } from "react-router";
 import Typewriter from "typewriter-effect";
@@ -17,12 +18,7 @@ export const LandingRoute = () => {
       />
       <header className="border-b">
         <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4">
-          <div className="shrink-0">
-            <Heading5 className="cursor-pointer">
-              <span className="text-neon-green">Lock</span>
-              Box
-            </Heading5>
-          </div>
+          <AppTitle />
           <div className="flex shrink-0 gap-3">
             <Button
               onClick={() => {
@@ -55,9 +51,9 @@ export const LandingRoute = () => {
               <Typewriter
                 options={{
                   strings: [
-                    "“Berhenti pusing mikirin banyak password.”",
-                    "“Data kamu terenkripsi dengan baik”",
-                    "“Keamanan di tangan kamu. Privasi tetap milik kamu.”",
+                    "“Pusing mikirin banyak password?”",
+                    "“Simpan di LockBox agar data kamu aman.”",
+                    "“Data kamu terenkripsi dengan baik.”",
                   ],
                   autoStart: true,
                   loop: true,

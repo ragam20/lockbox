@@ -34,6 +34,8 @@ import { Input } from "@/components/ui/input";
 import { queryClient } from "@/lib/react-query";
 import { useArchive } from "../api/archive";
 import { useSetFavorite } from "../api/set-favorite";
+import { EmptyState } from "@/components/ui/chip/empty-state";
+import { LoadingScreen } from "@/components/effects/loading-screen";
 
 type MenuItem = {
   key: "edit" | "favorite" | "archive" | "delete";
@@ -112,6 +114,8 @@ export const NotesList = () => {
     });
   };
 
+  const isLoadingList = items.isPending || items.isFetching;
+
   const actionMap = {
     edit: (v: VaultItem) => {
       setEditingItem(v);
@@ -141,10 +145,6 @@ export const NotesList = () => {
       });
     },
   } as const;
-
-  if (items.isPending) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <>
@@ -198,69 +198,82 @@ export const NotesList = () => {
           }}
         />
 
-        <ul className="flex min-w-0 flex-col gap-4">
-          {items.data?.data?.map((item) => (
-            <li
-              key={item.id}
-              className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
-            >
-              <div
-                onClick={() => {
-                  setDetailItem(item);
-                }}
-                className="cursor-pointer flex min-w-0 flex-1 items-center gap-4"
-              >
-                {item.iconURL ? (
-                  <img
-                    src={item.iconURL}
-                    alt={item.title}
-                    className="size-5 shrink-0 rounded-xs object-cover"
-                  />
-                ) : (
-                  <NoteIcon className="size-5 shrink-0" />
-                )}
-
-                <BodyText className="min-w-0 flex-1 truncate">
-                  {item.title}
-                </BodyText>
-              </div>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    className="cursor-pointer rounded-md"
-                    aria-label={`Buka menu untuk ${item.title}`}
+        {items.isError ? (
+          <EmptyState />
+        ) : isLoadingList ? (
+          <LoadingScreen className="min-h-56" />
+        ) : items.data?.data.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <>
+            <ul className="flex min-w-0 flex-col gap-4">
+              {items.data?.data?.map((item) => (
+                <li
+                  key={item.id}
+                  className="flex h-14 w-full min-w-0 items-center gap-4 rounded-md border border-forest p-4 hover:border-neon-green"
+                >
+                  <div
+                    onClick={() => {
+                      setDetailItem(item);
+                    }}
+                    className="cursor-pointer flex min-w-0 flex-1 items-center gap-4"
                   >
-                    <EllipsisIcon className="size-5" />
-                  </Button>
-                </DropdownMenuTrigger>
+                    {item.iconURL ? (
+                      <img
+                        src={item.iconURL}
+                        alt={item.title}
+                        className="size-5 shrink-0 rounded-xs object-cover"
+                      />
+                    ) : (
+                      <NoteIcon className="size-5 shrink-0" />
+                    )}
 
-                <DropdownMenuContent align="end" className="w-44 rounded-md">
-                  {menuItems.map((menuItem) => {
-                    const Icon = menuItem.icon;
+                    <BodyText className="min-w-0 flex-1 truncate">
+                      {item.title}
+                    </BodyText>
+                  </div>
 
-                    return (
-                      <DropdownMenuItem
-                        key={menuItem.key}
-                        variant={
-                          menuItem.destructive ? "destructive" : "default"
-                        }
-                        className="cursor-pointer gap-3 px-3 py-2 text-sm"
-                        onClick={() => actionMap[menuItem.key]?.(item)}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        className="cursor-pointer rounded-md"
+                        aria-label={`Buka menu untuk ${item.title}`}
                       >
-                        <Icon className="size-4" />
-                        <span>{menuItem.label}</span>
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </li>
-          ))}
-        </ul>
+                        <EllipsisIcon className="size-5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent
+                      align="end"
+                      className="w-44 rounded-md"
+                    >
+                      {menuItems.map((menuItem) => {
+                        const Icon = menuItem.icon;
+
+                        return (
+                          <DropdownMenuItem
+                            key={menuItem.key}
+                            variant={
+                              menuItem.destructive ? "destructive" : "default"
+                            }
+                            className="cursor-pointer gap-3 px-3 py-2 text-sm"
+                            onClick={() => actionMap[menuItem.key]?.(item)}
+                          >
+                            <Icon className="size-4" />
+                            <span>{menuItem.label}</span>
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
         <AppPagination
           page={params.page}
