@@ -5,14 +5,20 @@ type UserAvatarProps = {
   user: User;
   size?: "default" | "sm" | "lg";
   className?: string;
+  onClick?: () => void;
 };
 
-export const UserAvatar = ({ user, size, className }: UserAvatarProps) => {
+export const UserAvatar = ({
+  user,
+  size,
+  className,
+  onClick,
+}: UserAvatarProps) => {
   const initials = getInitials(user.name);
   const bgColor = stringToColors(user.name || "user");
 
   return (
-    <Avatar className={className} size={size}>
+    <Avatar className={className} size={size} onClick={onClick}>
       <AvatarImage src={user.imgURL ? user.imgURL : ""} alt="user avatar" />
 
       <AvatarFallback
