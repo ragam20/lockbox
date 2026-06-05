@@ -61,3 +61,17 @@ export type PaginationMeta = {
   totalItems: number;
   totalPages: number;
 };
+
+export type UploadAvatarPermissionResponse = {
+  uploadURL: string;
+  apiKey: string;
+  signature: string;
+  publicId: string;
+  timestamp: number;
+  type: string;
+};
+
+export type UploadAvatarResponse = {
+  secure_url: string;
+  public_id: string;
+};

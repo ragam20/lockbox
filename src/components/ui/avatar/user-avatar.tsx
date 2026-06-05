@@ -1,4 +1,4 @@
-import type { User } from "@/types/api";
+import type { User } from "@/types/entity";
 import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
 
 type UserAvatarProps = {
@@ -13,11 +13,7 @@ export const UserAvatar = ({ user, size, className }: UserAvatarProps) => {
 
   return (
     <Avatar className={className} size={size}>
-      <AvatarImage
-        src={user.imgURL ? user.imgURL : ""}
-        alt="user avatar"
-        className="grayscale"
-      />
+      <AvatarImage src={user.imgURL ? user.imgURL : ""} alt="user avatar" />
 
       <AvatarFallback
         style={{ backgroundColor: bgColor }}
