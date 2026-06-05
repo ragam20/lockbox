@@ -39,20 +39,6 @@ export const ProtectedLayout = ({
   const searchParams = new URLSearchParams(window.location.search);
   const redirectTo = searchParams.get("redirectTo") || window.location.pathname;
 
-  // const [showLoading, setShowLoading] = useState(true);
-  //
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setShowLoading(false);
-  //   }, 1500);
-  //
-  //   return () => clearTimeout(timer);
-  // }, []);
-  //
-  // if (showLoading) {
-  //   return <LoadingScreen />;
-  // }
-
   if (appStore.appCrypto.masterKey === null) {
     return <Navigate to={paths.unlock.getHref(redirectTo)} replace />;
   }
