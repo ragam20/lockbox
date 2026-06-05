@@ -29,6 +29,7 @@ import { useAppStore } from "@/lib/store";
 import { AppTitle } from "../ui/text/title";
 import { useEffect, useState } from "react";
 import { LoadingScreen } from "../effects/loading-screen";
+import { Head } from "../seo/head";
 
 type DashboardMenu = {
   title: string;
@@ -74,13 +75,16 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   }
 
   return (
-    <SidebarProvider className="relative max-w-full overflow-x-clip">
-      <AppSidebar />
-      <SidebarInset className="min-w-0 max-w-full overflow-x-clip">
-        <SidebarTrigger className="absolute top-5 cursor-pointer" />
-        {children}
-      </SidebarInset>
-    </SidebarProvider>
+    <>
+      <Head title="Dashboard" description="" />
+      <SidebarProvider className="relative max-w-full overflow-x-clip">
+        <AppSidebar />
+        <SidebarInset className="min-w-0 max-w-full overflow-x-clip">
+          <SidebarTrigger className="absolute top-5 cursor-pointer" />
+          {children}
+        </SidebarInset>
+      </SidebarProvider>
+    </>
   );
 };
 

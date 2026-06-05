@@ -5,6 +5,7 @@ import { paths } from "@/config/paths";
 import { useGetUserQuery } from "./auth";
 import { useEffect } from "react";
 import { LoadingScreen } from "@/components/effects/loading-screen";
+import { Head } from "@/components/seo/head";
 
 export const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   const appStore = useAppStore();
@@ -43,5 +44,10 @@ export const ProtectedLayout = ({
     return <Navigate to={paths.unlock.getHref(redirectTo)} replace />;
   }
 
-  return children;
+  return (
+    <>
+      <Head title="Dashboard" description="" />
+      {children}
+    </>
+  );
 };

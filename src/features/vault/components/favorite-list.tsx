@@ -39,7 +39,7 @@ import { useArchive } from "../api/archive";
 import { useDeleteFavorite } from "../api/delete-favorite";
 import { useGetFavorites } from "../api/get-favorites";
 import { EmptyState } from "@/components/ui/chip/empty-state";
-import { LoadingScreen } from "@/components/effects/loading-screen";
+import { SkeletonLoading } from "@/components/effects/skeleton-loading";
 
 type FavoriteAction = "edit" | "favorite" | "archive" | "delete";
 
@@ -276,7 +276,7 @@ export const FavoriteList = () => {
         {items.isError ? (
           <EmptyState />
         ) : isLoadingList ? (
-          <LoadingScreen className="min-h-56" />
+          <SkeletonLoading />
         ) : items.data?.data.length === 0 ? (
           <EmptyState />
         ) : (
