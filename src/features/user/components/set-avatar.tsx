@@ -16,6 +16,7 @@ import {
 import { toast } from "sonner";
 import { useUploadAvatar } from "../api/upload-avatar";
 import { queryClient } from "@/lib/react-query";
+import { PhotoView } from "@/components/ui/dialog/photo-view";
 
 type AvatarAction = "setAvatar" | "deleteAvatar";
 
@@ -46,6 +47,7 @@ type SetAvatarProps = {
 export const SetAvatar = ({ user, onChange }: SetAvatarProps) => {
   const avatarInputId = useId();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarView, setAvatarView] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -114,9 +116,18 @@ export const SetAvatar = ({ user, onChange }: SetAvatarProps) => {
 
   return (
     <div className="relative mx-auto mb-8 size-36">
+      <PhotoView
+        open={avatarView}
+        setOpen={setAvatarView}
+        url={user.imgURL ?? ""}
+      />
+
       <UserAvatar
+        onClick={() => {
+          setAvatarView(!avatarView);
+        }}
         user={profileUser}
-        className="size-full **:data-[slot=avatar-fallback]:text-4xl"
+        className="cursor-pointer size-full **:data-[slot=avatar-fallback]:text-4xl"
       />
 
       <DropdownMenu>

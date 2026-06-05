@@ -35,7 +35,7 @@ type VaultSection = {
 const vaultSections: VaultSection[] = [
   {
     value: "web",
-    title: "Web",
+    title: "Password",
     description: "Simpan kredensial website dan akun online dengan rapi.",
     emptyState: "Belum ada login website yang tersimpan.",
     icon: GlobeLockIcon,
@@ -135,7 +135,7 @@ const VaultTabs = () => {
   );
 };
 
-type AddNewVaultAction = "create-login" | "create-note";
+type AddNewVaultAction = "create-password" | "create-note";
 
 type AddNewVaultItem = {
   title: string;
@@ -149,7 +149,7 @@ const addNewVaultItem: AddNewVaultItem[] = [
     title: "Masuk",
     icon: GlobeLockIcon,
     iconClassName: "text-blue-500 size-3",
-    action: "create-login",
+    action: "create-password",
   },
   {
     title: "Catatan",
@@ -171,7 +171,7 @@ const AddNewVaultItemPopover = ({
   children,
 }: AddNewVaultItemPopoverProps) => {
   const actionHandlers: Partial<Record<AddNewVaultAction, () => void>> = {
-    "create-login": onCreateLogin,
+    "create-password": onCreateLogin,
     "create-note": onCreateNote,
   };
 
