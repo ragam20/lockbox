@@ -35,7 +35,7 @@ import { queryClient } from "@/lib/react-query";
 import { useArchive } from "../api/archive";
 import { useSetFavorite } from "../api/set-favorite";
 import { EmptyState } from "@/components/ui/chip/empty-state";
-import { LoadingScreen } from "@/components/effects/loading-screen";
+import { SkeletonLoading } from "@/components/effects/skeleton-loading";
 
 type MenuItem = {
   key: "edit" | "favorite" | "archive" | "delete";
@@ -201,7 +201,7 @@ export const NotesList = () => {
         {items.isError ? (
           <EmptyState />
         ) : isLoadingList ? (
-          <LoadingScreen className="min-h-56" />
+          <SkeletonLoading />
         ) : items.data?.data.length === 0 ? (
           <EmptyState />
         ) : (

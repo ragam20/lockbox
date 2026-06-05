@@ -34,7 +34,7 @@ import { useVaultDelete } from "../api/delete-item";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/ui/chip/empty-state";
-import { LoadingScreen } from "@/components/effects/loading-screen";
+import { SkeletonLoading } from "@/components/effects/skeleton-loading";
 
 type ArchiveAction = "restore" | "delete";
 
@@ -194,7 +194,7 @@ export const ArchiveList = () => {
         {items.isError ? (
           <EmptyState />
         ) : isLoadingList ? (
-          <LoadingScreen className="min-h-56" />
+          <SkeletonLoading />
         ) : items.data?.data.length === 0 ? (
           <EmptyState />
         ) : (
