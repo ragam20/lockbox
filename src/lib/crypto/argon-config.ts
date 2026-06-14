@@ -34,9 +34,13 @@ export async function hashArgon2id(
 }
 
 export async function verifyArgon2id(password: string, encoded: string) {
-  return await argon2.verify({
-    pass: password,
-    encoded: encoded,
-    type: argon2.ArgonType.Argon2id,
-  });
+  try {
+    return await argon2.verify({
+      pass: password,
+      encoded: encoded,
+      type: argon2.ArgonType.Argon2id,
+    });
+  } catch {
+    return false;
+  }
 }

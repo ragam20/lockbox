@@ -98,6 +98,7 @@ export const UnlockForm = () => {
 
     appStore.appCrypto.setCrypto({
       masterKey: masterKey.hash,
+      authVerifier: authVerifier,
     });
 
     loginMutation.mutateAsync(

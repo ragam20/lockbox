@@ -74,10 +74,15 @@ export const useGetArgonConfigQuery = () => {
 export const useLogout = () => {
   const store = useAppStore();
 
-  const doLogout = async () => {
-    await logout();
-    queryClient.removeQueries({ queryKey: ["auth"] });
-    store.clearApp();
+  const doLogout = async (onSuccess?: () => void) => {
+    try {
+      await logout();
+    } finally {
+      queryClient.clear();
+      store.clearApp();
+    }
+
+    onSuccess?.();
   };
 
   return {

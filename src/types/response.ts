@@ -75,3 +75,9 @@ export type UploadAvatarResponse = {
   secure_url: string;
   public_id: string;
 };
+
+export type ProtectionKey = {
+  itemId: string;
+  ivProtectionKey: string;
+  protectionKey: string;
+};
