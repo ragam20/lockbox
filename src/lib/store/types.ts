@@ -1,5 +1,6 @@
 export type AppCryptoState = {
   masterKey: Uint8Array | null;
+  authVerifier: string | null;
 };
 
 export type AppCryptoSlice = {

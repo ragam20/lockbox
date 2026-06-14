@@ -100,8 +100,12 @@ export function createHKDFBaseKey(masterKey: BufferSource) {
   );
 }
 
-export async function wrapDataEncryptionKey(dek: CryptoKey, kek: CryptoKey) {
-  const iv = crypto.getRandomValues(new Uint8Array(16));
+export async function wrapDataEncryptionKey(
+  dek: CryptoKey,
+  kek: CryptoKey,
+  iv?: ArrayBuffer,
+) {
+  iv = !iv ? randomArrayBuffer(16) : iv;
 
   const wrappedKey = await crypto.subtle.wrapKey(
     /**
@@ -167,8 +171,9 @@ type EncryptedDataResult = {
 export async function encryptData(
   dek: CryptoKey,
   data: string,
+  iv?: ArrayBuffer,
 ): Promise<EncryptedDataResult> {
-  const iv = randomArrayBuffer(16);
+  iv = !iv ? randomArrayBuffer(16) : iv;
   const ciphertext = await crypto.subtle.encrypt(
     { name: "AES-GCM", iv: iv },
     dek,

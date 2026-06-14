@@ -20,7 +20,6 @@ import {
   deriveVaultKey,
   encryptData,
   randomDataEncryptionKey,
-  uint8ToBase64,
   wrapDataEncryptionKey,
 } from "@/lib/crypto/keys";
 import { useAppStore } from "@/lib/store";
@@ -95,7 +94,7 @@ export const CreatePassword = ({ open, onOpenChange }: CreateLoginProps) => {
         itemType: "password",
         ivCipherText: arrayBufferToBase64(ciphertext.iv),
         ciphertext: arrayBufferToBase64(ciphertext.ciphertext),
-        ivProtectionKey: uint8ToBase64(encryptedDEK.iv),
+        ivProtectionKey: arrayBufferToBase64(encryptedDEK.iv),
         protectionKey: arrayBufferToBase64(encryptedDEK.wrappedKey),
       },
       {
