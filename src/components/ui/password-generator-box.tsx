@@ -1,6 +1,6 @@
 import { BodyMedium, BodyText, Heading3 } from "../typography";
 import { ArrowsClockwiseIcon, CopyIcon } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { cn, getPasswordStrength, type PasswordStrength } from "@/lib/utils";
 import { Checkbox } from "./checkbox";
@@ -87,22 +87,16 @@ export const PasswordGeneratorBox = () => {
       defaultTotalCharacters,
     ),
   );
-  const [showSelectionError, setShowSelectionError] = useState(false);
   const hasNoSelection =
     !checkLower && !checkUpper && !checkDigit && !checkSymbol;
   const hasSymbolOnly =
     checkSymbol && !checkLower && !checkUpper && !checkDigit;
   const hasInvalidSelection = hasNoSelection || hasSymbolOnly;
+  const showSelectionError = hasInvalidSelection;
   const highlightAllOptions = showSelectionError && hasNoSelection;
   const selectedCharacterLength = totalCharacters[0];
   const [passwordStrength, setPasswordStrength] =
     useState<PasswordStrength | null>(null);
-
-  useEffect(() => {
-    if (!hasInvalidSelection) {
-      setShowSelectionError(false);
-    }
-  }, [hasInvalidSelection]);
 
   const characterOptions = [
     {
@@ -143,7 +137,6 @@ export const PasswordGeneratorBox = () => {
     }
 
     if (hasInvalidSelection) {
-      setShowSelectionError(true);
       setPassword("");
       return;
     }

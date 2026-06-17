@@ -3,6 +3,7 @@ import type { AppCryptoSlice, AppCryptoState, AppStore } from "./types";
 
 export const initAppCryptoState: AppCryptoState = {
   masterKey: null,
+  authVerifier: null,
 };
 
 export const createAppCryptoSclice: StateCreator<
