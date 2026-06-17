@@ -13,7 +13,7 @@ export const getFavorites = async (params: VaultApiParams) => {
     },
   );
 
-  return resp;
+  return resp.data;
 };
 
 export const useGetFavorites = (params: VaultApiParams) => {
