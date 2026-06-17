@@ -30,7 +30,7 @@ export const refreshToken = async () => {
 };
 
 export const getArgonConfig = async () => {
-  const resp = await privateApi.get<unknown, ApiResponse<ArgonConfig>>(
+  const resp = await privateApi.get<ApiResponse<ArgonConfig>>(
     "/vault/argon-config",
   );
 
@@ -38,12 +38,12 @@ export const getArgonConfig = async () => {
 };
 
 export const getVault = async () => {
-  const resp = await privateApi.get<unknown, ApiResponse<Vault>>("/vault");
+  const resp = await privateApi.get<ApiResponse<Vault>>("/vault");
   return resp.data.data;
 };
 
 export const getUser = async () => {
-  const resp = await privateApi.get<unknown, ApiResponse<User>>("/user");
+  const resp = await privateApi.get<ApiResponse<User>>("/user");
   return resp.data.data;
 };
 

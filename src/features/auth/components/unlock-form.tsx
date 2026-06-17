@@ -176,7 +176,10 @@ export const UnlockForm = () => {
         </CardContent>
       </Card>
 
-      <p className="text-red-600 text-center cursor-pointer" onClick={logout}>
+      <p
+        className="text-red-600 text-center cursor-pointer"
+        onClick={() => logout()}
+      >
         Logout
       </p>
     </div>

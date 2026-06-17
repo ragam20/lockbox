@@ -22,7 +22,6 @@ import {
   deriveVaultKey,
   encryptData,
   randomDataEncryptionKey,
-  uint8ToBase64,
   unwrapDataEncryptionKey,
   wrapDataEncryptionKey,
 } from "@/lib/crypto/keys";
@@ -157,7 +156,7 @@ export const EditPassword = ({
         itemType: "password",
         ciphertext: arrayBufferToBase64(ciphertext.ciphertext),
         ivCipherText: arrayBufferToBase64(ciphertext.iv),
-        ivProtectionKey: uint8ToBase64(encryptedDEK.iv),
+        ivProtectionKey: arrayBufferToBase64(encryptedDEK.iv),
         protectionKey: arrayBufferToBase64(encryptedDEK.wrappedKey),
       },
       {

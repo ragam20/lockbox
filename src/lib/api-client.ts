@@ -1,6 +1,6 @@
 import { env } from "@/config/env";
 import { ApiError } from "@/types/response";
-import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
+import axios, { type InternalAxiosRequestConfig } from "axios";
 import { getErrorMessage } from "./errors/messages";
 import { paths } from "@/config/paths";
 import type { ISOStringFormat } from "date-fns";
@@ -54,7 +54,7 @@ const isAuthRoute = (pathname: string) => {
 
 privateApi.interceptors.response.use(
   (response) => response,
-  async (err: AxiosError) => {
+  async (err) => {
     const status = err.response?.status;
 
     const originalRequest = err.config as
@@ -93,9 +93,20 @@ privateApi.interceptors.response.use(
       }
     }
 
-    const code = err.response?.data?.code || "";
+    if (!err.response) {
+      return Promise.reject(
+        new ApiError(
+          "NETWORK_ERROR",
+          getErrorMessage("NETWORK_ERROR", "Network error"),
+          0,
+          new Date().toISOString() as ISOStringFormat,
+        ),
+      );
+    }
+
+    const code = err.response?.data?.code || 0;
     const statusCode = err.response?.status || 0;
-    const message = err.response?.data?.message || "";
+    const message = err.response?.data.message || "";
     const timestamp = err.response?.data?.timestamp || "";
 
     return Promise.reject(
