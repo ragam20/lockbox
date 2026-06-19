@@ -3,7 +3,7 @@ import argon2 from "argon2-browser/dist/argon2-bundled.min.js";
 const DEFAULT_ARGON_HASH_LEN = 32;
 const DEFAULT_ARGON_TIME = 3;
 const DEFAULT_ARGON_MEMORY = 64 * 1024;
-const DEFAULT_ARGON_PARALLELISM = 2;
+const DEFAULT_ARGON_PARALLELISM = 3;
 
 export type ArgonOptions = {
   time?: number;
