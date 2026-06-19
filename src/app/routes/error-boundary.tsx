@@ -13,9 +13,9 @@ export const ErrorBoundaryRoute = () => {
     : "Opss, terjadi kesalahan.";
 
   return (
-    <div className="w-250 min-h-screen mx-auto flex flex-col gap-4 items-center justify-center">
+    <div className="w-full min-h-screen mx-auto flex flex-col gap-4 items-center justify-center">
       <Head title="Error" description="Terjadi kesalahan" />
-      <Heading3>{isNotFound ? "404" : "500"}</Heading3>
+      <Heading3 className="text-center">{isNotFound ? "404" : "500"}</Heading3>
       <BodyText>{message}</BodyText>
       <Button onClick={() => navigate(-1)} className="py-4 px-8 cursor-pointer">
         Kembali
