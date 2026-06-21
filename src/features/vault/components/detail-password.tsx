@@ -108,17 +108,17 @@ export const DetailPassword = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-fit max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] overflow-y-auto mb-8">
+      <DialogContent className="w-full md:w-fit max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] overflow-y-auto mb-8">
         <DialogHeader>
           <Heading5>Detail Password</Heading5>
         </DialogHeader>
 
         <div className="flex flex-col gap-3">
           <p className="text-sm text-gray-500">Judul</p>
-          <BodyText className="text-sm break-words">{item?.title}</BodyText>
+          <BodyText className="text-sm wrap-break-word">{item?.title}</BodyText>
 
           <p className="text-sm text-gray-500">URL</p>
-          <BodyText className="text-sm break-words">{item?.url}</BodyText>
+          <BodyText className="text-sm wrap-break-word">{item?.url}</BodyText>
 
           <div
             onClick={() => setIsPasswordVisible(!isPasswordVisible)}
@@ -154,18 +154,24 @@ export const DetailPassword = ({
 
           <p className="text-sm text-gray-500">Description</p>
           <div className="max-h-65 overflow-y-auto">
-            <BodyText className="text-sm break-words whitespace-pre-wrap">{item?.description}</BodyText>
+            <BodyText className="text-sm break-words whitespace-pre-wrap">
+              {item?.description}
+            </BodyText>
           </div>
 
           <div className="flex flex-wrap justify-between gap-4">
             <div>
               <p className="text-sm text-gray-500">Dibuat</p>
-              <BodyText className="text-sm">{formatDateTime(item?.createdAt)}</BodyText>
+              <BodyText className="text-sm">
+                {formatDateTime(item?.createdAt)}
+              </BodyText>
             </div>
 
             <div>
               <p className="text-sm text-gray-500">Diperbarui</p>
-              <BodyText className="text-sm">{formatDateTime(item?.updatedAt)}</BodyText>
+              <BodyText className="text-sm">
+                {formatDateTime(item?.updatedAt)}
+              </BodyText>
             </div>
           </div>
         </div>
