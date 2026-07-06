@@ -7,7 +7,7 @@ import type { ISOStringFormat } from "date-fns";
 
 const axiosBaseConfig = {
   baseURL: env.API_URL,
-  timeout: 5500,
+  timeout: 20_000,
   headers: {
     "Content-Type": "application/json",
   },
