@@ -53,6 +53,15 @@ export type VaultItemNote = Entity<{
   updatedAt?: ISOStringFormat | string;
 }>;
 
+export type VaultItemApiKey = Entity<{
+  iconURL?: string;
+  title: string;
+  key: string;
+  description: string;
+  createdAt?: ISOStringFormat | string;
+  updatedAt?: ISOStringFormat | string;
+}>;
+
 export type VaultItem = {
   id: string;
   iconURL?: string;

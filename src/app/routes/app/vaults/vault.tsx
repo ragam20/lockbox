@@ -10,6 +10,8 @@ import {
   StarIcon,
   type LucideIcon,
 } from "lucide-react";
+import { LuBookKey } from "react-icons/lu";
+
 import { FavoriteSection } from "./tab/favorites";
 import { PasswordSection } from "./tab/password";
 import { NotesSection } from "./tab/notes";
@@ -21,13 +23,15 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { CreateNote } from "@/features/vault/components/create-note";
+import type { IconType } from "react-icons/lib";
+import { ApiKeysSection } from "./tab/api-keys";
 
 type VaultSection = {
   value: string;
   title: string;
   description: string;
   emptyState: string;
-  icon: LucideIcon;
+  icon: LucideIcon | IconType;
   iconClassName: string;
   section: React.ReactNode;
 };
@@ -50,6 +54,15 @@ const vaultSections: VaultSection[] = [
     icon: NotebookTextIcon,
     iconClassName: "text-amber-900",
     section: <NotesSection />,
+  },
+  {
+    value: "api-key",
+    title: "Api Keys",
+    emptyState: "Belum ada login website yang tersimpan.",
+    description: "Simpan Api Keys dengan rapih dan aman.",
+    icon: LuBookKey,
+    iconClassName: "text-yellow-300",
+    section: <ApiKeysSection />,
   },
   {
     value: "favorite",
