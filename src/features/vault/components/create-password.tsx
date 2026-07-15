@@ -27,15 +27,10 @@ import { useGetVaultQuery } from "@/lib/auth";
 
 const createPasswordSchema = z.object({
   title: z.string(),
-  password: z.string(),
-  url: z.string().refine((val) => {
-    try {
-      new URL(val);
-      return true;
-    } catch {
-      return false;
-    }
-  }, "Invalid URL"),
+  password: z
+    .string({ error: "Password wajib diisi" })
+    .min(1, "Password tidak boleh kosong"),
+  url: z.string().optional(),
   description: z.string().optional(),
 });
 type CreatePasswordData = z.infer<typeof createPasswordSchema>;
@@ -129,7 +124,7 @@ export const CreatePassword = ({ open, onOpenChange }: CreateLoginProps) => {
                 />
               </FormField>
 
-              <FormField label="url" error={errors.url}>
+              <FormField label="url (optional)">
                 <Input
                   className="py-5"
                   placeholder="https://www.example.com"
@@ -141,6 +136,7 @@ export const CreatePassword = ({ open, onOpenChange }: CreateLoginProps) => {
                 label="password"
                 showPassword={showPassword}
                 setShowPassword={setShowPassword}
+                error={errors.password}
               >
                 <Input
                   type={showPassword ? "text" : "password"}
