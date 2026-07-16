@@ -35,6 +35,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { EditApiKey } from "./edit-api-key";
+import { DetailApiKey } from "./detail-api-key";
 
 type Menuitem = {
   key: "edit" | "favorite" | "archive" | "delete";
@@ -181,6 +183,22 @@ export const ApiKeyList = () => {
       </div>
 
       <div className="mt-15 flex min-w-0 flex-col gap-6 overflow-x-hidden">
+        <EditApiKey
+          open={Boolean(editingItem)}
+          vaultItem={editingItem}
+          onOpenChange={(state) => {
+            if (!state) setEditingItem(null);
+          }}
+        />
+
+        <DetailApiKey
+          open={Boolean(detailItem)}
+          vaultItem={detailItem}
+          onOpenChange={(state) => {
+            if (!state) setDetailItem(null);
+          }}
+        />
+
         {items.isError ? (
           <EmptyState />
         ) : isLoadingList ? (

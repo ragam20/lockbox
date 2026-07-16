@@ -2,10 +2,17 @@ import { BodyText, Heading5 } from "@/components/typography";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useGetVaultQuery } from "@/lib/auth";
+import {
+  base64ToArrayBuffer,
+  createHKDFBaseKey,
+  decryptData,
+  deriveVaultKey,
+  unwrapDataEncryptionKey,
+} from "@/lib/crypto/keys";
 import { useAppStore } from "@/lib/store";
-import type { VaultItem, VaultItemPassword } from "@/types/entity";
+import type { VaultItem, VaultItemApiKey } from "@/types/entity";
 import { format, isValid } from "date-fns";
-import { CopyIcon, EyeIcon, EyeOffIcon, CheckIcon } from "lucide-react";
+import { CheckIcon, CopyIcon, EyeIcon, EyeOffIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -30,12 +37,55 @@ export const DetailApiKey = ({
 }: DetailApiKeyProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
-  const [item, setItem] = useState<VaultItemPassword | null>(null);
+  const [item, setItem] = useState<VaultItemApiKey | null>(null);
 
   const appStore = useAppStore();
   const vaultConfig = useGetVaultQuery();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const unwrapItem = async () => {
+      if (
+        vaultItem &&
+        appStore.appCrypto.masterKey &&
+        vaultConfig.data?.vaultKeySalt
+      ) {
+        const baseKey = await createHKDFBaseKey(appStore.appCrypto.masterKey);
+
+        const vaultKey = await deriveVaultKey(
+          baseKey,
+          base64ToArrayBuffer(vaultConfig.data?.vaultKeySalt),
+        );
+
+        const unwrappedDEK = await unwrapDataEncryptionKey(
+          vaultKey,
+          base64ToArrayBuffer(vaultItem.ivProtectionKey),
+          base64ToArrayBuffer(vaultItem.protectionKey),
+        );
+
+        const unwrappedData = await decryptData(
+          unwrappedDEK,
+          base64ToArrayBuffer(vaultItem.ivCiphertext),
+          base64ToArrayBuffer(vaultItem.ciphertext),
+        );
+
+        const plaintText = new TextDecoder().decode(unwrappedData);
+        const dt = JSON.parse(plaintText);
+
+        const itemApiKey: VaultItemApiKey = {
+          id: vaultItem.id,
+          title: vaultItem.title,
+          key: dt.key,
+          description: dt.description,
+          createdAt: vaultItem.createdAt,
+          updatedAt: vaultItem.updatedAt,
+        };
+
+        setItem(itemApiKey);
+      }
+    };
+
+    unwrapItem();
+  }, [vaultItem, appStore.appCrypto.masterKey, vaultConfig.data?.vaultKeySalt]);
 
   const handleCopy = async (text: string) => {
     try {
@@ -55,7 +105,7 @@ export const DetailApiKey = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="w-full md:w-fit max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] overflow-y-auto mb-8">
         <DialogHeader>
           <Heading5>Detail Api Key</Heading5>
         </DialogHeader>
@@ -77,9 +127,9 @@ export const DetailApiKey = ({
           </div>
           <div className="flex justify-between items-center">
             <Input
-              placeholder={item?.password}
+              placeholder={item?.key}
               type={`${isPasswordVisible ? "text" : "password"}`}
-              value={item?.password}
+              value={item?.key}
               className="bg-void border-0 focus-visible:ring-0  flex-1 text-white"
               readOnly
             />
@@ -87,7 +137,7 @@ export const DetailApiKey = ({
             {!isCopy ? (
               <CopyIcon
                 onClick={() => {
-                  handleCopy(item?.password ?? "");
+                  handleCopy(item?.key ?? "");
                 }}
                 className="size-4 cursor-pointer"
               />

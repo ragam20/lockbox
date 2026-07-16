@@ -76,4 +76,4 @@ export type VaultItem = {
   updatedAt?: ISOStringFormat | string;
 };
 
-export const VAULT_ITEM_TYPE = ["note", "password"] as const;
+export const VAULT_ITEM_TYPE = ["note", "password", "apiKey"] as const;

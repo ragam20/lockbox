@@ -10,6 +10,7 @@ import { Form, FormField, PasswordFormField } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
 import { useGetVaultQuery } from "@/lib/auth";
 import {
+  arrayBufferToBase64,
   base64ToArrayBuffer,
   createHKDFBaseKey,
   deriveVaultKey,
@@ -17,12 +18,15 @@ import {
   randomDataEncryptionKey,
   wrapDataEncryptionKey,
 } from "@/lib/crypto/keys";
+import { queryClient } from "@/lib/react-query";
 import { useAppStore } from "@/lib/store";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import z from "zod";
+import { useCreateApiKey } from "../api/create-api-key";
 
 const createApiKeySchema = z.object({
-  title: z.string(),
+  title: z.string().min(1, "Tidak boleh kosong"),
   key: z.string().min(1, "Tidak boleh kosong"),
   description: z.string().optional(),
 });
@@ -36,8 +40,19 @@ export const CreateApiKey = ({ open, onOpenChange }: CreateApiKeyProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const appStore = useAppStore();
   const vaultConfig = useGetVaultQuery();
+  const createApiKeyMutation = useCreateApiKey();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (createApiKeyMutation.isSuccess) {
+      toast.success("Berhasil buat api key baru");
+      return;
+    }
+
+    if (createApiKeyMutation.isError) {
+      toast.error("Gagal buat api key");
+      return;
+    }
+  }, [createApiKeyMutation.isSuccess, createApiKeyMutation.isError]);
 
   const handleInput = async (data: CreateApiKeyData) => {
     const dt = {
@@ -63,7 +78,22 @@ export const CreateApiKey = ({ open, onOpenChange }: CreateApiKeyProps) => {
 
     const ciphertext = await encryptData(dataEncryptionKey, JSON.stringify(dt));
 
-    // create
+    createApiKeyMutation.mutateAsync(
+      {
+        title: data.title,
+        itemType: "apiKey",
+        ivCipherText: arrayBufferToBase64(ciphertext.iv),
+        ciphertext: arrayBufferToBase64(ciphertext.ciphertext),
+        ivProtectionKey: arrayBufferToBase64(encryptedDEK.iv),
+        protectionKey: arrayBufferToBase64(encryptedDEK.wrappedKey),
+      },
+      {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
+          onOpenChange(false);
+        },
+      },
+    );
   };
 
   return (
@@ -73,17 +103,17 @@ export const CreateApiKey = ({ open, onOpenChange }: CreateApiKeyProps) => {
           <Heading5>Api Key</Heading5>
         </DialogHeader>
         <Form
-          id="create-login-id"
+          id="create-api-key-id"
           className="my-4 flex flex-col"
           schema={createApiKeySchema}
           onSubmit={handleInput}
         >
           {({ register, errors }) => (
             <>
-              <FormField label="judul" error={errors.title}>
+              <FormField label="nama" error={errors.title}>
                 <Input
                   className="py-5"
-                  placeholder="contoh: facebook"
+                  placeholder="contoh: chatgpt"
                   {...register("title")}
                 />
               </FormField>
@@ -124,8 +154,8 @@ export const CreateApiKey = ({ open, onOpenChange }: CreateApiKeyProps) => {
           </Button>
           <SubmitButton
             type="submit"
-            form="create-login-id"
-            // loading={createPasswordMutation.isPending}
+            form="create-api-key-id"
+            loading={createApiKeyMutation.isPending}
             className="w-full cursor-pointer rounded-md xl:w-fit"
           >
             Buat

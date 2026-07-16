@@ -1,3 +1,4 @@
+import { Heading5 } from "@/components/typography";
 import { Button, SubmitButton } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,18 +10,22 @@ import { Form, FormField, PasswordFormField } from "@/components/ui/form/form";
 import { Input } from "@/components/ui/input";
 import { useGetVaultQuery } from "@/lib/auth";
 import {
+  arrayBufferToBase64,
   base64ToArrayBuffer,
   createHKDFBaseKey,
+  decryptData,
   deriveVaultKey,
   encryptData,
   randomDataEncryptionKey,
+  unwrapDataEncryptionKey,
   wrapDataEncryptionKey,
 } from "@/lib/crypto/keys";
+import { queryClient } from "@/lib/react-query";
 import { useAppStore } from "@/lib/store";
 import type { VaultItem, VaultItemApiKey } from "@/types/entity";
-import { Heading5 } from "lucide-react";
 import { useEffect, useState } from "react";
 import z from "zod";
+import { useUpdateVault } from "../api/update-item";
 
 const editApiKeySchema = z.object({
   title: z.string(),
@@ -34,7 +39,7 @@ type EditApiKeyProps = {
   onOpenChange: (state: boolean) => void;
   vaultItem: VaultItem | null;
 };
-export const DetailApiKey = ({
+export const EditApiKey = ({
   open,
   onOpenChange,
   vaultItem,
@@ -44,8 +49,52 @@ export const DetailApiKey = ({
 
   const appStore = useAppStore();
   const vaultConfig = useGetVaultQuery();
+  const updateMutation = useUpdateVault();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const unwrapItem = async () => {
+      if (
+        vaultItem &&
+        appStore.appCrypto.masterKey &&
+        vaultConfig.data?.vaultKeySalt
+      ) {
+        const baseKey = await createHKDFBaseKey(appStore.appCrypto.masterKey);
+
+        const vaultKey = await deriveVaultKey(
+          baseKey,
+          base64ToArrayBuffer(vaultConfig.data?.vaultKeySalt),
+        );
+
+        const unwrappedDEK = await unwrapDataEncryptionKey(
+          vaultKey,
+          base64ToArrayBuffer(vaultItem.ivProtectionKey),
+          base64ToArrayBuffer(vaultItem.protectionKey),
+        );
+
+        const unwrappedData = await decryptData(
+          unwrappedDEK,
+          base64ToArrayBuffer(vaultItem.ivCiphertext),
+          base64ToArrayBuffer(vaultItem.ciphertext),
+        );
+
+        const plaintText = new TextDecoder().decode(unwrappedData);
+        const dt = JSON.parse(plaintText);
+
+        const itemApiKey: VaultItemApiKey = {
+          id: vaultItem.id,
+          title: vaultItem.title,
+          key: dt.key,
+          description: dt.description,
+          createdAt: vaultItem.createdAt,
+          updatedAt: vaultItem.updatedAt,
+        };
+
+        setItem(itemApiKey);
+      }
+    };
+
+    unwrapItem();
+  }, [vaultItem, appStore.appCrypto.masterKey, vaultConfig.data?.vaultKeySalt]);
 
   const handleSubmit = async (data: EditApiKeyData) => {
     setItem((v) => {
@@ -82,27 +131,43 @@ export const DetailApiKey = ({
 
     const ciphertext = await encryptData(dataEncryptionKey, JSON.stringify(dt));
 
-    // update
+    updateMutation.mutateAsync(
+      {
+        id: item?.id,
+        title: data.title,
+        itemType: "apiKey",
+        ciphertext: arrayBufferToBase64(ciphertext.ciphertext),
+        ivCipherText: arrayBufferToBase64(ciphertext.iv),
+        ivProtectionKey: arrayBufferToBase64(encryptedDEK.iv),
+        protectionKey: arrayBufferToBase64(encryptedDEK.wrappedKey),
+      },
+      {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["vault", "items"] });
+          onOpenChange(false);
+        },
+      },
+    );
   };
 
-  if (!vaultItem) return null;
+  if (!item) return null;
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-150">
         <DialogHeader>
-          <Heading5>Ubah Password</Heading5>
+          <Heading5>Ubah Api Key</Heading5>
         </DialogHeader>
 
         <Form
-          key={item?.id}
+          key={item.id}
           id="edit-api-key-id"
           className="my-4 flex flex-col"
           schema={editApiKeySchema}
           defaultValues={{
-            title: item?.title,
-            key: item?.key ?? "",
-            description: item?.description ?? "",
+            title: item.title,
+            key: item.key ?? "",
+            description: item.description ?? "",
           }}
           onSubmit={handleSubmit}
         >
@@ -117,14 +182,14 @@ export const DetailApiKey = ({
               </FormField>
 
               <PasswordFormField
-                label="password"
+                label="api key"
                 error={errors.key}
                 showPassword={showPassword}
                 setShowPassword={setShowPassword}
               >
                 <Input
                   type={showPassword ? "text" : "password"}
-                  placeholder="password123..."
+                  placeholder="Api...Key"
                   className="py-5"
                   {...register("key")}
                 />
