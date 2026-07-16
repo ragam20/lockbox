@@ -62,7 +62,7 @@ const vaultSections: VaultSection[] = [
     emptyState: "Belum ada login website yang tersimpan.",
     description: "Simpan Api Keys dengan rapih dan aman.",
     icon: LuBookKey,
-    iconClassName: "text-yellow-300",
+    iconClassName: "text-amber-500",
     section: <ApiKeysSection />,
   },
   {
@@ -181,7 +181,7 @@ const addNewVaultItem: AddNewVaultItem[] = [
   {
     title: "Api Key",
     icon: LuBookKey,
-    iconClassName: "text-yellow-300 size-3",
+    iconClassName: "text-amber-500 size-3",
     action: "create-api-key",
   },
 ];
