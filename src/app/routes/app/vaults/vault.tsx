@@ -167,7 +167,7 @@ type AddNewVaultItem = {
 
 const addNewVaultItem: AddNewVaultItem[] = [
   {
-    title: "Masuk",
+    title: "Password",
     icon: GlobeLockIcon,
     iconClassName: "text-blue-500 size-3",
     action: "create-password",
