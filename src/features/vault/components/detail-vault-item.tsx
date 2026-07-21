@@ -1,6 +1,7 @@
 import type { VaultItem } from "@/types/entity";
 import { DetailPassword } from "./detail-password";
 import { DetailNote } from "./detail-note";
+import { DetailApiKey } from "./detail-api-key";
 
 type VaultItemDetailProps = {
   open: boolean;
@@ -18,6 +19,16 @@ export const VaultItemDetail = ({
   if (item.itemType === "password") {
     return (
       <DetailPassword
+        open={open}
+        onOpenChange={onOpenChange}
+        vaultItem={item}
+      />
+    );
+  }
+
+  if (item.itemType === "apiKey") {
+    return (
+      <DetailApiKey
         open={open}
         onOpenChange={onOpenChange}
         vaultItem={item}
