@@ -10,6 +10,8 @@ import {
   StarIcon,
   type LucideIcon,
 } from "lucide-react";
+import { LuBookKey } from "react-icons/lu";
+
 import { FavoriteSection } from "./tab/favorites";
 import { PasswordSection } from "./tab/password";
 import { NotesSection } from "./tab/notes";
@@ -21,13 +23,16 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { CreateNote } from "@/features/vault/components/create-note";
+import type { IconType } from "react-icons/lib";
+import { ApiKeysSection } from "./tab/api-keys";
+import { CreateApiKey } from "@/features/vault/components/create-api-key";
 
 type VaultSection = {
   value: string;
   title: string;
   description: string;
   emptyState: string;
-  icon: LucideIcon;
+  icon: LucideIcon | IconType;
   iconClassName: string;
   section: React.ReactNode;
 };
@@ -52,6 +57,15 @@ const vaultSections: VaultSection[] = [
     section: <NotesSection />,
   },
   {
+    value: "api-key",
+    title: "Api Keys",
+    emptyState: "Belum ada login website yang tersimpan.",
+    description: "Simpan Api Keys dengan rapih dan aman.",
+    icon: LuBookKey,
+    iconClassName: "text-amber-500",
+    section: <ApiKeysSection />,
+  },
+  {
     value: "favorite",
     title: "Favorite",
     description: "Kumpulan item yang paling sering kamu akses.",
@@ -74,6 +88,7 @@ export const VaultRoute = () => {
 const VaultTabs = () => {
   const [isCreateLoginOpen, setIsCreateLoginOpen] = useState(false);
   const [isCreateNoteOpen, setIsCreateNoteOpen] = useState(false);
+  const [isCreateApiKeyOpen, setIsCreateApiKeyOpen] = useState(false);
 
   return (
     <div className="min-h-screen w-full max-w-full touch-pan-y overflow-x-clip overscroll-x-none bg-void">
@@ -83,6 +98,11 @@ const VaultTabs = () => {
       />
 
       <CreateNote open={isCreateNoteOpen} onOpenChange={setIsCreateNoteOpen} />
+
+      <CreateApiKey
+        open={isCreateApiKeyOpen}
+        onOpenChange={setIsCreateApiKeyOpen}
+      />
 
       <Tabs
         defaultValue={vaultSections[0].value}
@@ -111,6 +131,7 @@ const VaultTabs = () => {
           <AddNewVaultItemPopover
             onCreateLogin={() => setIsCreateLoginOpen(true)}
             onCreateNote={() => setIsCreateNoteOpen(true)}
+            onCreateApiKey={() => setIsCreateApiKeyOpen(true)}
           >
             <Button className="my-4 hover:bg-neon-green rounded-md gap-1  cursor-pointer font-bold text-sm">
               <PlusIcon className="size-5 mb-0.5" />
@@ -135,18 +156,18 @@ const VaultTabs = () => {
   );
 };
 
-type AddNewVaultAction = "create-password" | "create-note";
+type AddNewVaultAction = "create-password" | "create-note" | "create-api-key";
 
 type AddNewVaultItem = {
   title: string;
-  icon: LucideIcon;
+  icon: LucideIcon | IconType;
   iconClassName: string;
   action?: AddNewVaultAction;
 };
 
 const addNewVaultItem: AddNewVaultItem[] = [
   {
-    title: "Masuk",
+    title: "Password",
     icon: GlobeLockIcon,
     iconClassName: "text-blue-500 size-3",
     action: "create-password",
@@ -157,22 +178,31 @@ const addNewVaultItem: AddNewVaultItem[] = [
     iconClassName: "text-amber-900 size-3",
     action: "create-note",
   },
+  {
+    title: "Api Key",
+    icon: LuBookKey,
+    iconClassName: "text-amber-500 size-3",
+    action: "create-api-key",
+  },
 ];
 
 type AddNewVaultItemPopoverProps = {
   onCreateLogin: () => void;
   onCreateNote: () => void;
+  onCreateApiKey: () => void;
   children: React.ReactNode;
 };
 
 const AddNewVaultItemPopover = ({
   onCreateLogin,
   onCreateNote,
+  onCreateApiKey,
   children,
 }: AddNewVaultItemPopoverProps) => {
   const actionHandlers: Partial<Record<AddNewVaultAction, () => void>> = {
     "create-password": onCreateLogin,
     "create-note": onCreateNote,
+    "create-api-key": onCreateApiKey,
   };
 
   return (

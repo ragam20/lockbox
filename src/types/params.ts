@@ -1,4 +1,4 @@
-export type VaultType = "note" | "password" | "all";
+export type VaultType = "note" | "password" | "apiKey" | "all";
 
 export type VaultApiParams = {
   page: number;
