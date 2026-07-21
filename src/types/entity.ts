@@ -53,6 +53,15 @@ export type VaultItemNote = Entity<{
   updatedAt?: ISOStringFormat | string;
 }>;
 
+export type VaultItemApiKey = Entity<{
+  iconURL?: string;
+  title: string;
+  key: string;
+  description: string;
+  createdAt?: ISOStringFormat | string;
+  updatedAt?: ISOStringFormat | string;
+}>;
+
 export type VaultItem = {
   id: string;
   iconURL?: string;
@@ -67,4 +76,4 @@ export type VaultItem = {
   updatedAt?: ISOStringFormat | string;
 };
 
-export const VAULT_ITEM_TYPE = ["note", "password"] as const;
+export const VAULT_ITEM_TYPE = ["note", "password", "apiKey"] as const;
