@@ -18,11 +18,12 @@ import {
   PencilIcon,
   StarIcon,
   Trash2Icon,
-  type LucideIcon,
 } from "lucide-react";
-import { useState, type FormEvent } from "react";
+import { useState, type ComponentType, type FormEvent } from "react";
 import { EditPassword } from "./edit-password";
 import { EditNote } from "./edit-note";
+import { EditApiKey } from "./edit-api-key";
+import { DetailApiKey } from "./detail-api-key";
 import { VaultItemDetail } from "./detail-vault-item";
 import type { VaultItem } from "@/types/entity";
 import type { PaginationResponse } from "@/types/response";
@@ -40,13 +41,14 @@ import { useDeleteFavorite } from "../api/delete-favorite";
 import { useGetFavorites } from "../api/get-favorites";
 import { EmptyState } from "@/components/ui/chip/empty-state";
 import { SkeletonLoading } from "@/components/effects/skeleton-loading";
+import { BsKey } from "react-icons/bs";
 
 type FavoriteAction = "edit" | "favorite" | "archive" | "delete";
 
 type FavoriteMenuItem = {
   key: FavoriteAction;
   label: string;
-  icon: LucideIcon;
+  icon: ComponentType<{ className?: string }>;
   destructive?: boolean;
 };
 
@@ -60,7 +62,7 @@ const commonFavoriteMenuItems: FavoriteMenuItem[] = [
 const favoriteTypeConfig: Record<
   string,
   {
-    fallbackIcon: LucideIcon;
+    fallbackIcon: ComponentType<{ className?: string }>;
   }
 > = {
   password: {
@@ -68,6 +70,9 @@ const favoriteTypeConfig: Record<
   },
   note: {
     fallbackIcon: NoteIcon,
+  },
+  apiKey: {
+    fallbackIcon: BsKey,
   },
 };
 
@@ -81,6 +86,9 @@ export const FavoriteList = () => {
   const [editingPasswordItem, setEditingPasswordItem] =
     useState<VaultItem | null>(null);
   const [editingNoteItem, setEditingNoteItem] = useState<VaultItem | null>(
+    null,
+  );
+  const [editingApiKeyItem, setEditingApiKeyItem] = useState<VaultItem | null>(
     null,
   );
   const [detailItem, setDetailItem] = useState<VaultItem | null>(null);
@@ -175,6 +183,9 @@ export const FavoriteList = () => {
         case "password":
           setEditingPasswordItem(item);
           break;
+        case "apiKey":
+          setEditingApiKeyItem(item);
+          break;
         default:
           toast.error("item tidak ada!");
       }
@@ -265,13 +276,33 @@ export const FavoriteList = () => {
           }}
         />
 
-        <VaultItemDetail
-          open={Boolean(detailItem)}
-          item={detailItem}
+        <EditApiKey
+          open={Boolean(editingApiKeyItem)}
+          vaultItem={editingApiKeyItem}
           onOpenChange={(state) => {
-            if (!state) setDetailItem(null);
+            if (!state) setEditingApiKeyItem(null);
           }}
         />
+
+        <>
+          {detailItem?.itemType === "apiKey" ? (
+            <DetailApiKey
+              open={Boolean(detailItem)}
+              vaultItem={detailItem}
+              onOpenChange={(state) => {
+                if (!state) setDetailItem(null);
+              }}
+            />
+          ) : (
+            <VaultItemDetail
+              open={Boolean(detailItem)}
+              item={detailItem}
+              onOpenChange={(state) => {
+                if (!state) setDetailItem(null);
+              }}
+            />
+          )}
+        </>
 
         {items.isError ? (
           <EmptyState />
