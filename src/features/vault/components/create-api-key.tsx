@@ -100,7 +100,7 @@ export const CreateApiKey = ({ open, onOpenChange }: CreateApiKeyProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-150">
         <DialogHeader>
-          <Heading5>Api Key</Heading5>
+          <Heading5 className="text-[20px] font-bold">Api Key</Heading5>
         </DialogHeader>
         <Form
           id="create-api-key-id"

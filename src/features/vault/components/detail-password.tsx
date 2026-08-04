@@ -110,7 +110,7 @@ export const DetailPassword = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-full md:w-fit max-w-[calc(100vw-2rem)] sm:max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] overflow-y-auto mb-8">
         <DialogHeader>
-          <Heading5>Detail Password</Heading5>
+          <Heading5 className="text-[20px] font-bold">Detail Password</Heading5>
         </DialogHeader>
 
         <div className="flex flex-col gap-3">
