@@ -174,7 +174,7 @@ export const EditPassword = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-150">
         <DialogHeader>
-          <Heading5>Ubah Password</Heading5>
+          <Heading5 className="text-[20px] font-bold">Ubah Password</Heading5>
         </DialogHeader>
 
         <Form

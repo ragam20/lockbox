@@ -152,7 +152,7 @@ export const EditNote = ({ open, vaultItem, onOpenChange }: EditNoteProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-150">
         <DialogHeader>
-          <Heading5>Ubah Catatan</Heading5>
+          <Heading5 className="text-[20px] font-bold">Ubah Catatan</Heading5>
         </DialogHeader>
 
         <Form

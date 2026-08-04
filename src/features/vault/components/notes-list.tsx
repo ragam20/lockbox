@@ -228,7 +228,7 @@ export const NotesList = () => {
                       <NoteIcon className="size-5 shrink-0" />
                     )}
 
-                    <BodyText className="min-w-0 flex-1 truncate">
+                    <BodyText className="min-w-0 flex-1 truncate text-sm">
                       {item.title}
                     </BodyText>
                   </div>
