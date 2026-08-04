@@ -98,7 +98,7 @@ export const CreateNote = ({ open, onOpenChange }: CreateNoteProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-150">
         <DialogHeader>
-          <Heading5>Catatan Baru</Heading5>
+          <Heading5 className="text-[20px] font-bold">Catatan Baru</Heading5>
         </DialogHeader>
         <Form
           id="create-note-id"

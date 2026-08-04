@@ -105,7 +105,7 @@ export const CreatePassword = ({ open, onOpenChange }: CreateLoginProps) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-150">
         <DialogHeader>
-          <Heading5>Password Baru</Heading5>
+          <Heading5 className="text-[20px] font-bold">Password Baru</Heading5>
         </DialogHeader>
 
         <Form
